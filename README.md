@@ -1,13 +1,14 @@
 # vim-perl6
-Improved support for Perl 6 in Vim.
+Improved support for Raku in Vim.
 
 ## Installation
 Installation of this plugin can be done via any of the available plugin
 managers, such as [Pathogen][pathogen], [vim-plug][vim-plug], [vundle][vundle]
 or any other one.
 
-Once installed, all files ending in `.pl6`. `.pm6` or `.p6` will make use of
-the plugin's features.
+Once installed, all files ending in `.raku` or '.rakutest' (and also `.pl6` or
+`.pm6` or `.p6` or `.t6` for legacy purposes) will make use of the plugin's
+features.
 
 ## Configuring optional features
 Not all features are enabled by default. This is in part due to them still
