@@ -23,14 +23,6 @@ setlocal keywordprg=p6doc
 setlocal comments=:#\|,:#=,:#
 setlocal commentstring=#%s
 
-" Change the browse dialog on Win32 to show mainly Perl-related files
-if has("gui_win32")
-    let b:browsefilter = "Perl Source Files (*.pl)\t*.pl\n" .
-               \ "Perl Modules (*.pm)\t*.pm\n" .
-               \ "Perl Documentation Files (*.pod)\t*.pod\n" .
-               \ "All Files (*.*)\t*.*\n"
-endif
-
 " Provided by Ned Konz <ned at bike-nomad dot com>
 "---------------------------------------------
 setlocal include=\\<\\(use\\\|require\\)\\>
