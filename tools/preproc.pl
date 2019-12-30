@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-# This script is used to preprocess the perl6 syntax file to reduce
+# This script is used to preprocess the raku syntax file to reduce
 # repetition of common patterns. VimL requires cumbersome string
 # concatenation and eval to reuse patterns, which makes for a lot of
 # boilerplate code and a less readable regexes. So instead we preprocess
