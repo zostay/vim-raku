@@ -1,4 +1,4 @@
-token postfix:sym['->'] () { 
+token postfix:sym['->'] () {
     '->'
     <!{ $*QSIGIL }>
     [
@@ -46,4 +46,4 @@ is('aaaaa' ~~ /<	a aa aaaa >/, 'aaaa', 'leading whitespace quotes words (tab)');
 #ok(!('a0' ~~ m/$aref[0]/), 'Array ref stringifies before matching'); #OK
 #ok(!( "abcd f" ~~ m/abc <!before d <.ws> f>/ ), 'Negative lookahead failure');
 
-# vim: ft=perl6
+# vim: ft=raku

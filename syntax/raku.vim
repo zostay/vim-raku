@@ -1,5 +1,5 @@
 " Vim syntax file
-" Language:      Perl 6
+" Language:      Raku
 " Maintainer:    vim-perl <vim-perl@googlegroups.com>
 " Homepage:      https://github.com/vim-perl/vim-perl6
 " Bugs/requests: https://github.com/vim-perl/vim-perl6/issues
@@ -9,31 +9,30 @@
 "                Moritz Lenz <moritz@faui2k3.org>
 "                Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>
 "
-" This is a big undertaking. Perl 6 is the sort of language that only Perl
-" can parse. But I'll do my best to get vim to.
+" This is a big undertaking.
 "
-" The ftdetect/perl11.vim file in this repository takes care of setting the
-" right filetype for Perl 6 files. To set it explicitly you can also add this
+" The ftdetect/raku.vim file in this repository takes care of setting the
+" right filetype for Raku files. To set it explicitly you can also add this
 " line near the bottom of your source file:
-"   # vim: filetype=perl6
+"   # vim: filetype=raku
 
 " TODO:
 "   * Go over the list of keywords/types to see what's deprecated/missing
 "   * Add more support for folding (:help syn-fold)
 "
 " If you want to have Pir code inside Q:PIR// strings highlighted, do:
-"   let perl6_embedded_pir=1
+"   let raku_embedded_pir=1
 "
 " The above requires pir.vim, which you can find in Parrot's repository:
 " https://github.com/parrot/parrot/tree/master/editor
 "
 " To highlight Perl 5 regexes (m:P5//):
-"   let perl6_perl5_regexes=1
+"   let raku_perl5_regexes=1
 "
 " To enable folding:
-"   let perl6_fold=1
+"   let raku_fold=1
 
-if version < 704 | throw "perl6.vim uses regex syntax which Vim <7.4 doesn't support. Try 'make fix_old_vim' in the vim-perl repository." | endif
+if version < 704 | throw "raku.vim uses regex syntax which Vim <7.4 doesn't support. Try 'make fix_old_vim' in the vim-perl repository." | endif
 
 " For version 5.x: Clear all syntax items
 " For version 6.x: Quit when a syntax file was already loaded
@@ -465,7 +464,7 @@ syn match p6PairsQ_qto  "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9
 syn match p6PairsQ_qqto "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=p6StringQ_qqto
 
 
-if exists("perl6_embedded_pir") || exists("perl6_extended_all")
+if exists("raku_embedded_pir") || exists("raku_extended_all")
     syn include @p6PIR syntax/pir.vim
     syn match p6Quote_QPIR display "Q[A-Za-z(]\@!\%(\_s*:PIR\)\@=" nextgroup=p6PairsQ_PIR skipwhite skipempty
     syn match p6Pairs_QPIR contained "\_s*:PIR" transparent skipwhite skipempty nextgroup=p6StringQ_PIR
@@ -500,7 +499,7 @@ for [s:name, s:start_delim, s:end_delim, s:end_group, s:skip] in s:all_delims
     exec "syn region p6StringQ_qto matchgroup=p6Quote start=\"".s:start_delim."\\z([^".s:end_delim."]\\+\\)".s:end_delim."\" skip=\"".s:skip."\" end=\"^\\s*\\z1$\" contains=@p6Interp_q,".s:end_group." contained"
     exec "syn region p6StringQ_qqto matchgroup=p6Quote start=\"".s:start_delim."\\z(\[^".s:end_delim."]\\+\\)".s:end_delim."\" skip=\"".s:skip."\" end=\"^\\s*\\z1$\" contains=@p6Interp_qq,".s:end_group." contained"
 
-    if exists("perl6_embedded_pir") || exists("perl6_extended_all")
+    if exists("raku_embedded_pir") || exists("raku_extended_all")
         exec "syn region p6StringQ_PIR matchgroup=p6Quote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contains=@p6PIR,".s:end_group." contained"
     endif
 endfor
@@ -805,7 +804,7 @@ for [s:name, s:start_delim, s:end_delim, s:end_group, s:skip] in s:bracketing_de
 endfor
 unlet s:name s:start_delim s:end_delim s:end_group s:skip s:bracketing_delims
 
-if exists("perl6_perl5_regexes") || exists("perl6_extended_all")
+if exists("raku_perl5_regexes") || exists("raku_extended_all")
 
 " Perl 5 regex regions
 
@@ -1739,9 +1738,9 @@ syn region p6PodFormatFrench
 " Define the default highlighting.
 " For version 5.7 and earlier: only when not done already
 " For version 5.8 and later: only when an item doesn't have highlighting yet
-if version >= 508 || !exists("did_perl6_syntax_inits")
+if version >= 508 || !exists("did_raku_syntax_inits")
     if version < 508
-        let did_perl6_syntax_inits = 1
+        let did_raku_syntax_inits = 1
         command -nargs=+ HiLink hi link <args>
     else
         command -nargs=+ HiLink hi def link <args>
@@ -1950,7 +1949,7 @@ if version >= 508 || !exists("did_perl6_syntax_inits")
     delcommand HiLink
 endif
 
-if exists("perl6_fold") || exists("perl6_extended_all")
+if exists("raku_fold") || exists("raku_extended_all")
     setl foldmethod=syntax
     syn region p6BlockFold
         \ start="^\z(\s*\)\%(my\|our\|augment\|multi\|proto\|only\)\?\s*\%(\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\s\+\)\?\<\%(CATCH\|try\|ENTER\|LEAVE\|CHECK\|INIT\|BEGIN\|END\|KEEP\|UNDO\|PRE\|POST\|module\|package\|enum\|subset\|class\|sub\%(method\)\?\|multi\|method\|slang\|grammar\|regex\|token\|rule\)\>[^{]\+\%({\s*\%(#.*\)\?\)\?$"
@@ -1958,7 +1957,7 @@ if exists("perl6_fold") || exists("perl6_extended_all")
         \ transparent fold keepend extend
 endif
 
-let b:current_syntax = "perl6"
+let b:current_syntax = "raku"
 
 let &cpo = s:keepcpo
 unlet s:keepcpo

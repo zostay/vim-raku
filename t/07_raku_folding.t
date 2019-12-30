@@ -6,9 +6,9 @@ use Test::More tests => 1;
 use Local::VimFolds;
 
 my $folds = Local::VimFolds->new(
-    language => 'perl6',
+    language => 'raku',
     options  => {
-        perl6_fold => 1,
+        raku_fold => 1,
     },
 );
 

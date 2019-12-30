@@ -1,4 +1,4 @@
-#!perl6
+#!raku
 
 for @foo <-> $value {
 }
@@ -273,4 +273,4 @@ $foo ~~ S/foo/bar/;
 my()
 BEGIN()
 
-# vim: ft=perl6
+# vim: ft=raku

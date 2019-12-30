@@ -1,5 +1,5 @@
 " Vim filetype plugin file
-" Language:      Perl 6
+" Language:      Raku
 " Maintainer:    vim-perl <vim-perl@googlegroups.com>
 " Homepage:      https://github.com/vim-perl/vim-perl6
 " Bugs/requests: https://github.com/vim-perl/vim-perl6/issues
@@ -35,13 +35,13 @@ endif
 "---------------------------------------------
 setlocal include=\\<\\(use\\\|require\\)\\>
 setlocal includeexpr=substitute(v:fname,'::','/','g')
-setlocal suffixesadd=.pm6,.pm
+setlocal suffixesadd=.pm6,.pm,.raku,.rakutest,.t6
 setlocal define=[^A-Za-z_]
 
 " The following line changes a global variable but is necessary to make
 " gf and similar commands work. Thanks to Andrew Pimlott for pointing out
 " the problem. If this causes a " problem for you, add an
-" after/ftplugin/perl6.vim file that contains
+" after/ftplugin/raku.vim file that contains
 "       set isfname-=:
 set isfname+=:
 setlocal iskeyword=@,48-57,_,192-255,-
@@ -81,7 +81,7 @@ endif
 "---------------------------------------------
 
 " Convert ascii-based ops into their single-character unicode equivalent
-if get(g:, 'perl6_unicode_abbrevs', 0)
+if get(g:, 'raku_unicode_abbrevs', 0)
     iabbrev <buffer> !(<) ⊄
     iabbrev <buffer> !(<=) ⊈
     iabbrev <buffer> !(>) ⊅

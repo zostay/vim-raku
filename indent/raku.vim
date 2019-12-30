@@ -1,5 +1,5 @@
 " Vim indent file
-" Language:      Perl 6
+" Language:      Raku
 " Maintainer:    vim-perl <vim-perl@googlegroups.com>
 " Homepage:      https://github.com/vim-perl/vim-perl6
 " Bugs/requests: https://github.com/vim-perl/vim-perl6/issues
@@ -36,7 +36,7 @@ let b:did_indent = 1
 " Is syntax highlighting active ?
 let b:indent_use_syntax = has("syntax")
 
-setlocal indentexpr=GetPerl6Indent()
+setlocal indentexpr=GetRakuIndent()
 
 " we reset it first because the Perl 5 indent file might have been loaded due
 " to a .pl/pm file extension, and indent files don't clean up afterwards
@@ -50,7 +50,7 @@ endif
 let s:cpo_save = &cpo
 set cpo-=C
 
-function! GetPerl6Indent()
+function! GetRakuIndent()
 
     " Get the line to be indented
     let cline = getline(v:lnum)

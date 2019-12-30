@@ -359,4 +359,4 @@ is (9 R... 1, 3), (1, 3, 5, 7, 9), "Rop gets list_infix precedence correctly";
   is (~ [\||] 0, 0, 3, 4, 5), "0 0 3 3 3", "[\\||] works";
 }
 
-# vim: ft=perl6
+# vim: ft=raku

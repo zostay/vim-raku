@@ -30,4 +30,4 @@ foo
 #]]]
 say "this is executable code";
 
-# vim: ft=perl6
+# vim: ft=raku

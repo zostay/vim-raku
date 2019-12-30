@@ -62,4 +62,4 @@ sdfsdfsd
 foo
 3+3
 
-# vim: ft=perl6
+# vim: ft=raku
