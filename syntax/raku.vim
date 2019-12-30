@@ -69,31 +69,37 @@ let s:keywords = {
  \   "use require unit",
  \ ],
  \ "rakuConditional": [
- \   "if else elsif unless with orwith without",
+ \   "if else elsif unless with orwith without once",
  \ ],
  \ "rakuVarStorage": [
  \   "let my our state temp has constant",
  \ ],
  \ "rakuRepeat": [
  \   "for loop repeat while until gather given",
+ \   "supply react race hyper quietly",
  \ ],
  \ "rakuFlowControl": [
- \   "take do when next last redo return return-rw contend maybe defer",
- \   "start default exit make continue break goto leave async lift",
+ \   "take do when next last redo return return-rw",
+ \   "start default exit make continue break goto leave",
+ \   "proceed succeed whenever done",
  \ ],
  \ "rakuClosureTrait": [
  \   "BEGIN CHECK INIT START FIRST ENTER LEAVE KEEP",
  \   "UNDO NEXT LAST PRE POST END CATCH CONTROL TEMP",
+ \   "DOC QUIT CLOSE COMPOSE",
  \ ],
  \ "rakuException": [
  \   "die fail try warn",
  \ ],
  \ "rakuPragma": [
- \   "oo fatal",
+ \   "MONKEY-GUTS MONKEY-SEE-NO-EVAL MONKEY-TYPING MONKEY",
+ \   "experimental fatal isms lib newline nqp precompilation",
+ \   "soft strict trace variables worries",
  \ ],
  \ "rakuOperator": [
  \   "div xx x mod also leg cmp before after eq ne le lt not",
  \   "gt ge eqv ff fff and andthen or xor orelse extra lcm gcd o",
+ \   "unicmp notandthen minmax",
  \ ],
  \ "rakuType": [
  \   "int int1 int2 int4 int8 int16 int32 int64",
@@ -101,7 +107,8 @@ let s:keywords = {
  \   "buf buf1 buf2 buf4 buf8 buf16 buf32 buf64",
  \   "uint uint1 uint2 uint4 uint8 uint16 uint32 bit bool",
  \   "uint64 utf8 utf16 utf32 bag set mix complex",
- \   "num num32 num64 long longlong Pointer size_t str",
+ \   "num num32 num64 long longlong Pointer size_t str void",
+ \   "ulong ulonglong ssize_t atomicint",
  \ ],
 \ }
 
@@ -126,7 +133,7 @@ let s:types = [
 " to avoid matching package names that start with those letters.
 let s:alpha_metaops = [
  \ "div mod gcd lcm xx x does but cmp leg eq ne gt ge lt le before after eqv",
- \ "min max not so andthen and or orelse",
+ \ "min max not so andthen and or orelse unicmp coll minmax",
 \ ]
 let s:words_space = join(s:alpha_metaops, " ")
 let s:temp = split(s:words_space)
