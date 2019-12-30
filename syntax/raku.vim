@@ -62,40 +62,40 @@ set cpo&vim
 " @@IDENTIFIER_END_Q@@   "\\%(@@IDENT_CHAR_Q@@\\|[-']@@IDENT_NONDIGIT_Q@@\\)\\@!"
 
 " Identifiers (subroutines, methods, constants, classes, roles, etc)
-syn match p6Identifier display "\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
+syn match rakuIdentifier display "\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
 
 let s:keywords = {
- \ "p6Include": [
+ \ "rakuInclude": [
  \   "use require unit",
  \ ],
- \ "p6Conditional": [
+ \ "rakuConditional": [
  \   "if else elsif unless with orwith without",
  \ ],
- \ "p6VarStorage": [
+ \ "rakuVarStorage": [
  \   "let my our state temp has constant",
  \ ],
- \ "p6Repeat": [
+ \ "rakuRepeat": [
  \   "for loop repeat while until gather given",
  \ ],
- \ "p6FlowControl": [
+ \ "rakuFlowControl": [
  \   "take do when next last redo return return-rw contend maybe defer",
  \   "start default exit make continue break goto leave async lift",
  \ ],
- \ "p6ClosureTrait": [
+ \ "rakuClosureTrait": [
  \   "BEGIN CHECK INIT START FIRST ENTER LEAVE KEEP",
  \   "UNDO NEXT LAST PRE POST END CATCH CONTROL TEMP",
  \ ],
- \ "p6Exception": [
+ \ "rakuException": [
  \   "die fail try warn",
  \ ],
- \ "p6Pragma": [
+ \ "rakuPragma": [
  \   "oo fatal",
  \ ],
- \ "p6Operator": [
+ \ "rakuOperator": [
  \   "div xx x mod also leg cmp before after eq ne le lt not",
  \   "gt ge eqv ff fff and andthen or xor orelse extra lcm gcd o",
  \ ],
- \ "p6Type": [
+ \ "rakuType": [
  \   "int int1 int2 int4 int8 int16 int32 int64",
  \   "rat rat1 rat2 rat4 rat8 rat16 rat32 rat64",
  \   "buf buf1 buf2 buf4 buf8 buf16 buf32 buf64",
@@ -135,8 +135,8 @@ let s:alpha_metaops_or = join(s:temp, "\\|")
 " We don't use "syn keyword" here because that always has higher priority
 " than matches/regions, which would prevent these words from matching as
 " autoquoted strings before "=>" or "p5=>".
-syn match p6KeywordStart display "\%(\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\)\@!\)\@=[A-Za-z_\xC0-\xFF0-9]\@1<!\%([A-Za-z_\xC0-\xFF][-']\)\@2<!"
-    \ nextgroup=p6Attention,p6Variable,p6Include,p6Conditional,p6VarStorage,p6Repeat,p6FlowControl,p6ClosureTrait,p6Exception,p6Number,p6Pragma,p6Type,p6Operator,p6Identifier
+syn match rakuKeywordStart display "\%(\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\)\@!\)\@=[A-Za-z_\xC0-\xFF0-9]\@1<!\%([A-Za-z_\xC0-\xFF][-']\)\@2<!"
+    \ nextgroup=rakuAttention,rakuVariable,rakuInclude,rakuConditional,rakuVarStorage,rakuRepeat,rakuFlowControl,rakuClosureTrait,rakuException,rakuNumber,rakuPragma,rakuType,rakuOperator,rakuIdentifier
 
 for [s:group, s:words_list] in items(s:keywords)
     let s:words_space = join(s:words_list, " ")
@@ -148,163 +148,163 @@ endfor
 let s:words_space = join(s:types, " ")
 let s:temp = split(s:words_space)
 let s:words = join(s:temp, "\\|")
-exec "syn match p6Type display \"\\%(". s:words . "\\)\\%([A-Za-z_\\xC0-\\xFF0-9]\\|[-'][A-Za-z_\\xC0-\\xFF]\\)\\@!\" contained"
+exec "syn match rakuType display \"\\%(". s:words . "\\)\\%([A-Za-z_\\xC0-\\xFF0-9]\\|[-'][A-Za-z_\\xC0-\\xFF]\\)\\@!\" contained"
 unlet s:group s:words_list s:keywords s:types s:words_space s:temp s:words
 
-syn match p6PreDeclare display "[.^]\@1<!\<\%(multi\|proto\|only\)\>" nextgroup=p6Declare,p6Identifier skipwhite skipempty
-syn match p6Declare display "[.^]\@1<!\<\%(macro\|sub\|submethod\|method\|category\|module\|class\|role\|package\|enum\|grammar\|slang\|subset\)\>" nextgroup=p6Identifier skipwhite skipempty
-syn match p6DeclareRegex display "[.^]\@1<!\<\%(regex\|rule\|token\)\>" nextgroup=p6RegexName skipwhite skipempty
+syn match rakuPreDeclare display "[.^]\@1<!\<\%(multi\|proto\|only\)\>" nextgroup=rakuDeclare,rakuIdentifier skipwhite skipempty
+syn match rakuDeclare display "[.^]\@1<!\<\%(macro\|sub\|submethod\|method\|category\|module\|class\|role\|package\|enum\|grammar\|slang\|subset\)\>" nextgroup=rakuIdentifier skipwhite skipempty
+syn match rakuDeclareRegex display "[.^]\@1<!\<\%(regex\|rule\|token\)\>" nextgroup=rakuRegexName skipwhite skipempty
 
-syn match p6TypeConstraint  display "\%([.^]\|^\s*\)\@<!\a\@=\%(does\|as\|but\|trusts\|of\|returns\|handles\|where\|augment\|supersede\)\>"
-syn match p6TypeConstraint  display "\%([.^]\|^\s*\)\@<![A-Za-z_\xC0-\xFF0-9]\@1<!\%([A-Za-z_\xC0-\xFF][-']\)\@2<!is\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\)\@!" skipwhite skipempty nextgroup=p6Property
-syn match p6Property        display "\a\@=\%(signature\|context\|also\|shape\|prec\|irs\|ofs\|ors\|export\|deep\|binary\|unary\|reparsed\|rw\|parsed\|cached\|readonly\|defequiv\|will\|ref\|copy\|inline\|tighter\|looser\|equiv\|assoc\|required\)" contained
+syn match rakuTypeConstraint  display "\%([.^]\|^\s*\)\@<!\a\@=\%(does\|as\|but\|trusts\|of\|returns\|handles\|where\|augment\|supersede\)\>"
+syn match rakuTypeConstraint  display "\%([.^]\|^\s*\)\@<![A-Za-z_\xC0-\xFF0-9]\@1<!\%([A-Za-z_\xC0-\xFF][-']\)\@2<!is\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\)\@!" skipwhite skipempty nextgroup=rakuProperty
+syn match rakuProperty        display "\a\@=\%(signature\|context\|also\|shape\|prec\|irs\|ofs\|ors\|export\|deep\|binary\|unary\|reparsed\|rw\|parsed\|cached\|readonly\|defequiv\|will\|ref\|copy\|inline\|tighter\|looser\|equiv\|assoc\|required\)" contained
 
 " packages, must come after all the keywords
-syn match p6Identifier display "\%(::\)\@2<=\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)*"
-syn match p6Identifier display "\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(::\)\@="
+syn match rakuIdentifier display "\%(::\)\@2<=\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)*"
+syn match rakuIdentifier display "\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(::\)\@="
 
 " The sigil in ::*Package
-syn match p6PackageTwigil display "\%(::\)\@2<=\*"
+syn match rakuPackageTwigil display "\%(::\)\@2<=\*"
 
 " some standard packages
-syn match p6Type display "\%(::\)\@2<!\%(Order\%(::Same\|::More\|::Less\)\?\|Bool\%(::True\|::False\)\?\)\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\)\@!"
+syn match rakuType display "\%(::\)\@2<!\%(Order\%(::Same\|::More\|::Less\)\?\|Bool\%(::True\|::False\)\?\)\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\)\@!"
 
 " Don't put a "\+" at the end of the character class. That makes it so
 " greedy that the "%" " in "+%foo" won't be allowed to match as a sigil,
 " among other things
-syn match p6Operator display "[-+/*~?|=^!%&,<>».;\\∈∉∋∌∩∪≼≽⊂⊃⊄⊅⊆⊇⊈⊉⊍⊎⊖∅∘]"
-syn match p6Operator display "\%(:\@1<!::\@2!\|::=\|\.::\)"
+syn match rakuOperator display "[-+/*~?|=^!%&,<>».;\\∈∉∋∌∩∪≼≽⊂⊃⊄⊅⊆⊇⊈⊉⊍⊎⊖∅∘]"
+syn match rakuOperator display "\%(:\@1<!::\@2!\|::=\|\.::\)"
 " these require whitespace on the left side
-syn match p6Operator display "\%(\s\|^\)\@1<=\%(xx=\|p5=>\)"
+syn match rakuOperator display "\%(\s\|^\)\@1<=\%(xx=\|p5=>\)"
 " index overloading
-syn match p6Operator display "\%(&\.(\@=\|@\.\[\@=\|%\.{\@=\)"
+syn match rakuOperator display "\%(&\.(\@=\|@\.\[\@=\|%\.{\@=\)"
 
 " Reduce metaoperators like [+]
-syn match p6ReduceOp display "\%(^\|\s\|(\)\@1<=!*\%([RSXZ\[]\)*[&RSXZ]\?\[\+(\?\%(\d\|[@%$][.?^=[:alpha:]]\)\@!\%(\.\|[^[{('".[:space:]]\)\+)\?]\+"
-syn match p6SetOp    display "R\?(\%([-^.+|&]\|[<>][=+]\?\|cont\|elem\))"
+syn match rakuReduceOp display "\%(^\|\s\|(\)\@1<=!*\%([RSXZ\[]\)*[&RSXZ]\?\[\+(\?\%(\d\|[@%$][.?^=[:alpha:]]\)\@!\%(\.\|[^[{('".[:space:]]\)\+)\?]\+"
+syn match rakuSetOp    display "R\?(\%([-^.+|&]\|[<>][=+]\?\|cont\|elem\))"
 
 " Reverse, cross, and zip metaoperators
-exec "syn match p6RSXZOp display \"[RSXZ]:\\@!\\%(\\a\\@=\\%(". s:alpha_metaops_or . "\\)\\>\\|[[:alnum:]]\\@!\\%([.,]\\|[^[,.[:alnum:][:space:]]\\)\\+\\|\\s\\@=\\|$\\)\""
+exec "syn match rakuRSXZOp display \"[RSXZ]:\\@!\\%(\\a\\@=\\%(". s:alpha_metaops_or . "\\)\\>\\|[[:alnum:]]\\@!\\%([.,]\\|[^[,.[:alnum:][:space:]]\\)\\+\\|\\s\\@=\\|$\\)\""
 
-syn match p6BlockLabel display "^\s*\zs\h\w*\s*::\@!\_s\@="
+syn match rakuBlockLabel display "^\s*\zs\h\w*\s*::\@!\_s\@="
 
-syn match p6Number     display "[A-Za-z_\xC0-\xFF0-9]\@1<!\%(\%(\%(\_^\|\s\|[^*\a]\)\@1<=[-+]\)\?Inf\|NaN\)"
-syn match p6Number     display "[A-Za-z_\xC0-\xFF0-9]\@1<!\%(\%(\_^\|\s\|[^*\a]\)\@1<=[-+]\)\?\%(\%(\d\|__\@!\)*[._]\@1<!\.\)\?_\@!\%(\d\|_\)\+_\@1<!\%([eE]-\?_\@!\%(\d\|_\)\+\)\?i\?"
-syn match p6Number     display "[A-Za-z_\xC0-\xFF0-9]\@1<!\%(\%(\_^\|\s\|[^*\a]\)\@1<=[-+]\)\?0[obxd]\@="  nextgroup=p6OctBase,p6BinBase,p6HexBase,p6DecBase
-syn match p6OctBase    display "o" contained nextgroup=p6OctNumber
-syn match p6BinBase    display "b" contained nextgroup=p6BinNumber
-syn match p6HexBase    display "x" contained nextgroup=p6HexNumber
-syn match p6DecBase    display "d" contained nextgroup=p6DecNumber
-syn match p6OctNumber  display "[0-7][0-7_]*" contained
-syn match p6BinNumber  display "[01][01_]*" contained
-syn match p6HexNumber  display "\x[[:xdigit:]_]*" contained
-syn match p6DecNumber  display "\d[[:digit:]_]*" contained
+syn match rakuNumber     display "[A-Za-z_\xC0-\xFF0-9]\@1<!\%(\%(\%(\_^\|\s\|[^*\a]\)\@1<=[-+]\)\?Inf\|NaN\)"
+syn match rakuNumber     display "[A-Za-z_\xC0-\xFF0-9]\@1<!\%(\%(\_^\|\s\|[^*\a]\)\@1<=[-+]\)\?\%(\%(\d\|__\@!\)*[._]\@1<!\.\)\?_\@!\%(\d\|_\)\+_\@1<!\%([eE]-\?_\@!\%(\d\|_\)\+\)\?i\?"
+syn match rakuNumber     display "[A-Za-z_\xC0-\xFF0-9]\@1<!\%(\%(\_^\|\s\|[^*\a]\)\@1<=[-+]\)\?0[obxd]\@="  nextgroup=rakuOctBase,rakuBinBase,rakuHexBase,rakuDecBase
+syn match rakuOctBase    display "o" contained nextgroup=rakuOctNumber
+syn match rakuBinBase    display "b" contained nextgroup=rakuBinNumber
+syn match rakuHexBase    display "x" contained nextgroup=rakuHexNumber
+syn match rakuDecBase    display "d" contained nextgroup=rakuDecNumber
+syn match rakuOctNumber  display "[0-7][0-7_]*" contained
+syn match rakuBinNumber  display "[01][01_]*" contained
+syn match rakuHexNumber  display "\x[[:xdigit:]_]*" contained
+syn match rakuDecNumber  display "\d[[:digit:]_]*" contained
 
-syn match p6Version    display "\<v\d\+\%(\.\%(\*\|\d\+\)\)*+\?"
+syn match rakuVersion    display "\<v\d\+\%(\.\%(\*\|\d\+\)\)*+\?"
 
 " Contextualizers
-syn match p6Context display "\<\%(item\|list\|slice\|hash\)\>"
-syn match p6Context display "\%(\$\|@\|%\|&\)(\@="
+syn match rakuContext display "\<\%(item\|list\|slice\|hash\)\>"
+syn match rakuContext display "\%(\$\|@\|%\|&\)(\@="
 
 " Quoting
 
 " one cluster for every quote adverb
-syn cluster p6Interp_scalar
-    \ add=p6InterpScalar
+syn cluster rakuInterp_scalar
+    \ add=rakuInterpScalar
 
-syn cluster p6Interp_array
-    \ add=p6InterpArray
+syn cluster rakuInterp_array
+    \ add=rakuInterpArray
 
-syn cluster p6Interp_hash
-    \ add=p6InterpHash
+syn cluster rakuInterp_hash
+    \ add=rakuInterpHash
 
-syn cluster p6Interp_function
-    \ add=p6InterpFunction
+syn cluster rakuInterp_function
+    \ add=rakuInterpFunction
 
-syn cluster p6Interp_closure
-    \ add=p6InterpClosure
+syn cluster rakuInterp_closure
+    \ add=rakuInterpClosure
 
-syn cluster p6Interp_q
-    \ add=p6EscQQ
-    \ add=p6EscBackSlash
+syn cluster rakuInterp_q
+    \ add=rakuEscQQ
+    \ add=rakuEscBackSlash
 
-syn cluster p6Interp_backslash
-    \ add=@p6Interp_q
-    \ add=p6Escape
-    \ add=p6EscOpenCurly
-    \ add=p6EscCodePoint
-    \ add=p6EscHex
-    \ add=p6EscOct
-    \ add=p6EscOctOld
-    \ add=p6EscNull
+syn cluster rakuInterp_backslash
+    \ add=@rakuInterp_q
+    \ add=rakuEscape
+    \ add=rakuEscOpenCurly
+    \ add=rakuEscCodePoint
+    \ add=rakuEscHex
+    \ add=rakuEscOct
+    \ add=rakuEscOctOld
+    \ add=rakuEscNull
 
-syn cluster p6Interp_qq
-    \ add=@p6Interp_scalar
-    \ add=@p6Interp_array
-    \ add=@p6Interp_hash
-    \ add=@p6Interp_function
-    \ add=@p6Interp_closure
-    \ add=@p6Interp_backslash
-    \ add=p6MatchVarSigil
+syn cluster rakuInterp_qq
+    \ add=@rakuInterp_scalar
+    \ add=@rakuInterp_array
+    \ add=@rakuInterp_hash
+    \ add=@rakuInterp_function
+    \ add=@rakuInterp_closure
+    \ add=@rakuInterp_backslash
+    \ add=rakuMatchVarSigil
 
-syn region p6InterpScalar
+syn region rakuInterpScalar
     \ start="\ze\z(\$\%(\%(\%(\d\+\|!\|/\|¢\)\|\%(\%(\%([.^*?=!~]\|:\@1<!::\@!\)[A-Za-z_\xC0-\xFF]\@=\)\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\)\%(\.\^\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\|\%(([^)]*)\|\[[^\]]*]\|<[^>]*>\|«[^»]*»\|{[^}]*}\)\)*\)\.\?\%(([^)]*)\|\[[^\]]*]\|<[^>]*>\|«[^»]*»\|{[^}]*}\)\)\)"
     \ start="\ze\z(\$\%(\%(\%(\%([.^*?=!~]\|:\@1<!::\@!\)[A-Za-z_\xC0-\xFF]\@=\)\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\)\|\%(\d\+\|!\|/\|¢\)\)\)"
     \ end="\z1\zs"
     \ contained keepend
     \ contains=TOP
 
-syn region p6InterpScalar
-    \ matchgroup=p6Context
+syn region rakuInterpScalar
+    \ matchgroup=rakuContext
     \ start="\$\ze()\@!"
     \ skip="([^)]*)"
     \ end=")\zs"
     \ contained
     \ contains=TOP
 
-syn region p6InterpArray
+syn region rakuInterpArray
     \ start="\ze\z(@\$*\%(\%(\%(!\|/\|¢\)\|\%(\%(\%([.^*?=!~]\|:\@1<!::\@!\)[A-Za-z_\xC0-\xFF]\@=\)\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\)\%(\.\^\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\|\%(([^)]*)\|\[[^\]]*]\|<[^>]*>\|«[^»]*»\|{[^}]*}\)\)*\)\.\?\%(([^)]*)\|\[[^\]]*]\|<[^>]*>\|«[^»]*»\|{[^}]*}\)\)\)"
     \ end="\z1\zs"
     \ contained keepend
     \ contains=TOP
 
-syn region p6InterpArray
-    \ matchgroup=p6Context
+syn region rakuInterpArray
+    \ matchgroup=rakuContext
     \ start="@\ze()\@!"
     \ skip="([^)]*)"
     \ end=")\zs"
     \ contained
     \ contains=TOP
 
-syn region p6InterpHash
+syn region rakuInterpHash
     \ start="\ze\z(%\$*\%(\%(\%(!\|/\|¢\)\|\%(\%(\%([.^*?=!~]\|:\@1<!::\@!\)[A-Za-z_\xC0-\xFF]\@=\)\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\)\%(\.\^\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\|\%(([^)]*)\|\[[^\]]*]\|<[^>]*>\|«[^»]*»\|{[^}]*}\)\)*\)\.\?\%(([^)]*)\|\[[^\]]*]\|<[^>]*>\|«[^»]*»\|{[^}]*}\)\)\)"
     \ end="\z1\zs"
     \ contained keepend
     \ contains=TOP
 
-syn region p6InterpHash
-    \ matchgroup=p6Context
+syn region rakuInterpHash
+    \ matchgroup=rakuContext
     \ start="%\ze()\@!"
     \ skip="([^)]*)"
     \ end=")\zs"
     \ contained
     \ contains=TOP
 
-syn region p6InterpFunction
+syn region rakuInterpFunction
     \ start="\ze\z(&\%(\%(!\|/\|¢\)\|\%(\%(\%([.^*?=!~]\|:\@1<!::\@!\)[A-Za-z_\xC0-\xFF]\@=\)\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(\.\^\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\|\%(([^)]*)\|\[[^\]]*]\|<[^>]*>\|«[^»]*»\|{[^}]*}\)\)*\)\.\?\%(([^)]*)\|\[[^\]]*]\|<[^>]*>\|«[^»]*»\|{[^}]*}\)\)\)"
     \ end="\z1\zs"
     \ contained keepend
     \ contains=TOP
 
-syn region p6InterpFunction
-    \ matchgroup=p6Context
+syn region rakuInterpFunction
+    \ matchgroup=rakuContext
     \ start="&\ze()\@!"
     \ skip="([^)]*)"
     \ end=")\zs"
     \ contained
     \ contains=TOP
 
-syn region p6InterpClosure
+syn region rakuInterpClosure
     \ start="\\\@1<!{}\@!"
     \ skip="{[^}]*}"
     \ end="}"
@@ -312,28 +312,28 @@ syn region p6InterpClosure
     \ contains=TOP
 
 " generic escape
-syn match p6Escape          display "\\\S" contained
+syn match rakuEscape          display "\\\S" contained
 
 " escaped closing delimiters
-syn match p6EscQuote        display "\\'" contained
-syn match p6EscDoubleQuote  display "\\\"" contained
-syn match p6EscCloseAngle   display "\\>" contained
-syn match p6EscCloseFrench  display "\\»" contained
-syn match p6EscBackTick     display "\\`" contained
-syn match p6EscForwardSlash display "\\/" contained
-syn match p6EscVerticalBar  display "\\|" contained
-syn match p6EscExclamation  display "\\!" contained
-syn match p6EscComma        display "\\," contained
-syn match p6EscDollar       display "\\\$" contained
-syn match p6EscCloseCurly   display "\\}" contained
-syn match p6EscCloseBracket display "\\\]" contained
+syn match rakuEscQuote        display "\\'" contained
+syn match rakuEscDoubleQuote  display "\\\"" contained
+syn match rakuEscCloseAngle   display "\\>" contained
+syn match rakuEscCloseFrench  display "\\»" contained
+syn match rakuEscBackTick     display "\\`" contained
+syn match rakuEscForwardSlash display "\\/" contained
+syn match rakuEscVerticalBar  display "\\|" contained
+syn match rakuEscExclamation  display "\\!" contained
+syn match rakuEscComma        display "\\," contained
+syn match rakuEscDollar       display "\\\$" contained
+syn match rakuEscCloseCurly   display "\\}" contained
+syn match rakuEscCloseBracket display "\\\]" contained
 
 " matches :key, :!key, :$var, :key<var>, etc
 " Since we don't know in advance how the adverb ends, we use a trick.
 " Consume nothing with the start pattern (\ze at the beginning),
 " while capturing the whole adverb into \z1 and then putting it before
 " the match start (\zs) of the end pattern.
-syn region p6Adverb
+syn region rakuAdverb
     \ start="\ze\z(:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\|\[[^\]]*]\|<[^>]*>\|«[^»]*»\|{[^}]*}\)\?\)"
     \ start="\ze\z(:!\?[@$%]\$*\%(::\|\%(\$\@1<=\d\+\|!\|/\|¢\)\|\%(\%([.^*?=!~]\|:\@1<!::\@!\)[A-Za-z_\xC0-\xFF]\)\|\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\)\)"
     \ end="\z1\zs"
@@ -356,8 +356,8 @@ syn region p6Adverb
 "
 " * Preceded by [<+~=!] (e.g. <<foo>>, =<$foo>, * !< 3)
 " * Followed by [-=] (e.g. <--, <=, <==, <->)
-syn region p6StringAngle
-    \ matchgroup=p6Quote
+syn region rakuStringAngle
+    \ matchgroup=rakuQuote
     \ start="\%(\<\%(enum\|for\|any\|all\|none\)\>\s*(\?\s*\)\@<=<\%(<\|=>\|\%([=-]\{1,2}>\|[=-]\{2}\)\)\@!"
     \ start="\%(\s\|[<+~=!]\)\@<!<\%(<\|=>\|\%([=-]\{1,2}>\|[=-]\{2}\)\)\@!"
     \ start="[<+~=!]\@1<!<\%(\s\|<\|=>\|\%([=-]\{1,2}>\|[=-]\{1,2}\)\)\@!"
@@ -367,310 +367,310 @@ syn region p6StringAngle
     \ start="<\%(\s*>\)\@="
     \ skip="\\\@1<!\\>"
     \ end=">"
-    \ contains=p6InnerAnglesOne,p6EscBackSlash,p6EscCloseAngle
+    \ contains=rakuInnerAnglesOne,rakuEscBackSlash,rakuEscCloseAngle
 
-syn region p6StringAngleFixed
-    \ matchgroup=p6Quote
+syn region rakuStringAngleFixed
+    \ matchgroup=rakuQuote
     \ start="<"
     \ skip="\\\@1<!\\>"
     \ end=">"
-    \ contains=p6InnerAnglesOne,p6EscBackSlash,p6EscCloseAngle
+    \ contains=rakuInnerAnglesOne,rakuEscBackSlash,rakuEscCloseAngle
     \ contained
 
-syn region p6InnerAnglesOne
-    \ matchgroup=p6StringAngle
+syn region rakuInnerAnglesOne
+    \ matchgroup=rakuStringAngle
     \ start="\\\@1<!<"
     \ skip="\\\@1<!\\>"
     \ end=">"
     \ transparent contained
-    \ contains=p6InnerAnglesOne
+    \ contains=rakuInnerAnglesOne
 
 " <<words>>
-syn region p6StringAngles
-    \ matchgroup=p6Quote
+syn region rakuStringAngles
+    \ matchgroup=rakuQuote
     \ start="<<=\@!"
     \ skip="\\\@1<!\\>"
     \ end=">>"
-    \ contains=p6InnerAnglesTwo,@p6Interp_qq,p6Comment,p6BracketComment,p6EscHash,p6EscCloseAngle,p6Adverb,p6StringSQ,p6StringDQ
+    \ contains=rakuInnerAnglesTwo,@rakuInterp_qq,rakuComment,rakuBracketComment,rakuEscHash,rakuEscCloseAngle,rakuAdverb,rakuStringSQ,rakuStringDQ
 
-syn region p6InnerAnglesTwo
-    \ matchgroup=p6StringAngles
+syn region rakuInnerAnglesTwo
+    \ matchgroup=rakuStringAngles
     \ start="<<"
     \ skip="\\\@1<!\\>"
     \ end=">>"
     \ transparent contained
-    \ contains=p6InnerAnglesTwo
+    \ contains=rakuInnerAnglesTwo
 
 " «words»
-syn region p6StringFrench
-    \ matchgroup=p6Quote
+syn region rakuStringFrench
+    \ matchgroup=rakuQuote
     \ start="«"
     \ skip="\\\@1<!\\»"
     \ end="»"
-    \ contains=p6InnerFrench,@p6Interp_qq,p6Comment,p6BracketComment,p6EscHash,p6EscCloseFrench,p6Adverb,p6StringSQ,p6StringDQ
+    \ contains=rakuInnerFrench,@rakuInterp_qq,rakuComment,rakuBracketComment,rakuEscHash,rakuEscCloseFrench,rakuAdverb,rakuStringSQ,rakuStringDQ
 
-syn region p6InnerFrench
-    \ matchgroup=p6StringFrench
+syn region rakuInnerFrench
+    \ matchgroup=rakuStringFrench
     \ start="\\\@1<!«"
     \ skip="\\\@1<!\\»"
     \ end="»"
     \ transparent contained
-    \ contains=p6InnerFrench
+    \ contains=rakuInnerFrench
 
 " Hyperops. They need to come after "<>" and "«»" strings in order to override
 " them, but before other types of strings, to avoid matching those delimiters
 " as parts of hyperops.
-syn match p6HyperOp display #[^[:digit:][{('",:[:space:]][^[{('",:[:space:]]*\%(«\|<<\)#
-syn match p6HyperOp display "«\%(\d\|[@%$][.?^=[:alpha:]]\)\@!\%(\.\|[^[{('".[:space:]]\)\+[«»]"
-syn match p6HyperOp display "»\%(\d\|[@%$][.?^=[:alpha:]]\)\@!\%(\.\|[^[{('".[:space:]]\)\+\%(«\|»\?\)"
-syn match p6HyperOp display "<<\%(\d\|[@%$][.?^=[:alpha:]]\)\@!\%(\.\|[^[{('".[:space:]]\)\+\%(<<\|>>\)"
-syn match p6HyperOp display ">>\%(\d\|[@%$][.?^=[:alpha:]]\)\@!\%(\.\|[^[{('".[:space:]]\)\+\%(<<\|\%(>>\)\?\)"
+syn match rakuHyperOp display #[^[:digit:][{('",:[:space:]][^[{('",:[:space:]]*\%(«\|<<\)#
+syn match rakuHyperOp display "«\%(\d\|[@%$][.?^=[:alpha:]]\)\@!\%(\.\|[^[{('".[:space:]]\)\+[«»]"
+syn match rakuHyperOp display "»\%(\d\|[@%$][.?^=[:alpha:]]\)\@!\%(\.\|[^[{('".[:space:]]\)\+\%(«\|»\?\)"
+syn match rakuHyperOp display "<<\%(\d\|[@%$][.?^=[:alpha:]]\)\@!\%(\.\|[^[{('".[:space:]]\)\+\%(<<\|>>\)"
+syn match rakuHyperOp display ">>\%(\d\|[@%$][.?^=[:alpha:]]\)\@!\%(\.\|[^[{('".[:space:]]\)\+\%(<<\|\%(>>\)\?\)"
 
 " 'string'
-syn region p6StringSQ
-    \ matchgroup=p6Quote
+syn region rakuStringSQ
+    \ matchgroup=rakuQuote
     \ start="'"
     \ skip="\\\@1<!\\'"
     \ end="'"
-    \ contains=@p6Interp_q,p6EscQuote
+    \ contains=@rakuInterp_q,rakuEscQuote
     \ keepend extend
 
 " "string"
-syn region p6StringDQ
-    \ matchgroup=p6Quote
+syn region rakuStringDQ
+    \ matchgroup=rakuQuote
     \ start=+"+
     \ skip=+\\\@1<!\\"+
     \ end=+"+
-    \ contains=@p6Interp_qq,p6EscDoubleQuote
+    \ contains=@rakuInterp_qq,rakuEscDoubleQuote
     \ keepend extend
 
 " Q// and friends
 
-syn match p6QuoteQStart display "\%(:\|\%(sub\|role\)\s\)\@5<![Qq]\@=" nextgroup=p6QuoteQ,p6QuoteQ_q,p6QuoteQ_qww,p6QuoteQ_qq,p6QuoteQ_to,p6QuoteQ_qto,p6QuoteQ_qqto,p6Identifier
-syn match p6QuoteQ      display "Q\%(qq\|ww\|[abcfhpsqvwx]\)\?[A-Za-z(]\@!" nextgroup=p6PairsQ skipwhite skipempty contained
-syn match p6QuoteQ_q    display "q[abcfhpsvwx]\?[A-Za-z(]\@!" nextgroup=p6PairsQ_q skipwhite skipempty contained
-syn match p6QuoteQ_qww  display "qww[A-Za-z(]\@!" nextgroup=p6PairsQ_qww skipwhite skipempty contained
-syn match p6QuoteQ_qq   display "qq[pwx]\?[A-Za-z(]\@!" nextgroup=p6PairsQ_qq skipwhite skipempty contained
-syn match p6QuoteQ_to   display "Qto[A-Za-z(]\@!" nextgroup=p6StringQ_to skipwhite skipempty contained
-syn match p6QuoteQ_qto  display "qto[A-Za-z(]\@!" nextgroup=p6StringQ_qto skipwhite skipempty contained
-syn match p6QuoteQ_qqto display "qqto[A-Za-z(]\@!" nextgroup=p6StringQ_qqto skipwhite skipempty contained
-syn match p6QuoteQ_qto  display "q\_s*\%(\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*:\%(to\|heredoc\)\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*(\@!\)\@=" nextgroup=p6PairsQ_qto skipwhite skipempty contained
-syn match p6QuoteQ_qqto display "qq\_s*\%(\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*:\%(to\|heredoc\)\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*(\@!\)\@=" nextgroup=p6PairsQ_qqto skipwhite skipempty contained
-syn match p6PairsQ      "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=p6StringQ
-syn match p6PairsQ_q    "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=p6StringQ_q
-syn match p6PairsQ_qww  "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=p6StringQ_qww
-syn match p6PairsQ_qq   "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=p6StringQ_qq
-syn match p6PairsQ_qto  "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=p6StringQ_qto
-syn match p6PairsQ_qqto "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=p6StringQ_qqto
+syn match rakuQuoteQStart display "\%(:\|\%(sub\|role\)\s\)\@5<![Qq]\@=" nextgroup=rakuQuoteQ,rakuQuoteQ_q,rakuQuoteQ_qww,rakuQuoteQ_qq,rakuQuoteQ_to,rakuQuoteQ_qto,rakuQuoteQ_qqto,rakuIdentifier
+syn match rakuQuoteQ      display "Q\%(qq\|ww\|[abcfhpsqvwx]\)\?[A-Za-z(]\@!" nextgroup=rakuPairsQ skipwhite skipempty contained
+syn match rakuQuoteQ_q    display "q[abcfhpsvwx]\?[A-Za-z(]\@!" nextgroup=rakuPairsQ_q skipwhite skipempty contained
+syn match rakuQuoteQ_qww  display "qww[A-Za-z(]\@!" nextgroup=rakuPairsQ_qww skipwhite skipempty contained
+syn match rakuQuoteQ_qq   display "qq[pwx]\?[A-Za-z(]\@!" nextgroup=rakuPairsQ_qq skipwhite skipempty contained
+syn match rakuQuoteQ_to   display "Qto[A-Za-z(]\@!" nextgroup=rakuStringQ_to skipwhite skipempty contained
+syn match rakuQuoteQ_qto  display "qto[A-Za-z(]\@!" nextgroup=rakuStringQ_qto skipwhite skipempty contained
+syn match rakuQuoteQ_qqto display "qqto[A-Za-z(]\@!" nextgroup=rakuStringQ_qqto skipwhite skipempty contained
+syn match rakuQuoteQ_qto  display "q\_s*\%(\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*:\%(to\|heredoc\)\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*(\@!\)\@=" nextgroup=rakuPairsQ_qto skipwhite skipempty contained
+syn match rakuQuoteQ_qqto display "qq\_s*\%(\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*:\%(to\|heredoc\)\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*(\@!\)\@=" nextgroup=rakuPairsQ_qqto skipwhite skipempty contained
+syn match rakuPairsQ      "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=rakuStringQ
+syn match rakuPairsQ_q    "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=rakuStringQ_q
+syn match rakuPairsQ_qww  "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=rakuStringQ_qww
+syn match rakuPairsQ_qq   "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=rakuStringQ_qq
+syn match rakuPairsQ_qto  "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=rakuStringQ_qto
+syn match rakuPairsQ_qqto "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=rakuStringQ_qqto
 
 
 if exists("raku_embedded_pir") || exists("raku_extended_all")
-    syn include @p6PIR syntax/pir.vim
-    syn match p6Quote_QPIR display "Q[A-Za-z(]\@!\%(\_s*:PIR\)\@=" nextgroup=p6PairsQ_PIR skipwhite skipempty
-    syn match p6Pairs_QPIR contained "\_s*:PIR" transparent skipwhite skipempty nextgroup=p6StringQ_PIR
+    syn include @rakuPIR syntax/pir.vim
+    syn match rakuQuote_QPIR display "Q[A-Za-z(]\@!\%(\_s*:PIR\)\@=" nextgroup=rakuPairsQ_PIR skipwhite skipempty
+    syn match rakuPairs_QPIR contained "\_s*:PIR" transparent skipwhite skipempty nextgroup=rakuStringQ_PIR
 endif
 
 " hardcoded set of delimiters
 let s:plain_delims = [
-  \ ["DQ",          "\\\"",         "\\\"", "p6EscDoubleQuote",  "\\\\\\@1<!\\\\\\\""],
-  \ ["SQ",          "'",            "'",    "p6EscQuote",        "\\\\\\@1<!\\\\'"],
-  \ ["Slash",       "/",            "/",    "p6EscForwardSlash", "\\\\\\@1<!\\\\/"],
-  \ ["BackTick",    "`",            "`",    "p6EscBackTick",     "\\\\\\@1<!\\\\`"],
-  \ ["Bar",         "|",            "|",    "p6EscVerticalBar",  "\\\\\\@1<!\\\\|"],
-  \ ["Exclamation", "!",            "!",    "p6EscExclamation",  "\\\\\\@1<!\\\\!"],
-  \ ["Comma",       ",",            ",",    "p6EscComma",        "\\\\\\@1<!\\\\,"],
-  \ ["Dollar",      "\\$",          "\\$",  "p6EscDollar",       "\\\\\\@1<!\\\\\\$"],
+  \ ["DQ",          "\\\"",         "\\\"", "rakuEscDoubleQuote",  "\\\\\\@1<!\\\\\\\""],
+  \ ["SQ",          "'",            "'",    "rakuEscQuote",        "\\\\\\@1<!\\\\'"],
+  \ ["Slash",       "/",            "/",    "rakuEscForwardSlash", "\\\\\\@1<!\\\\/"],
+  \ ["BackTick",    "`",            "`",    "rakuEscBackTick",     "\\\\\\@1<!\\\\`"],
+  \ ["Bar",         "|",            "|",    "rakuEscVerticalBar",  "\\\\\\@1<!\\\\|"],
+  \ ["Exclamation", "!",            "!",    "rakuEscExclamation",  "\\\\\\@1<!\\\\!"],
+  \ ["Comma",       ",",            ",",    "rakuEscComma",        "\\\\\\@1<!\\\\,"],
+  \ ["Dollar",      "\\$",          "\\$",  "rakuEscDollar",       "\\\\\\@1<!\\\\\\$"],
 \ ]
 let s:bracketing_delims = [
-  \ ["Curly",   "{",            "}",    "p6EscCloseCurly",   "\\%(\\\\\\@1<!\\\\}\\|{[^}]*}\\)"],
-  \ ["Angle",   "<",            ">",    "p6EscCloseAngle",   "\\%(\\\\\\@1<!\\\\>\\|<[^>]*>\\)"],
-  \ ["French",  "«",            "»",    "p6EscCloseFrench",  "\\%(\\\\\\@1<!\\\\»\\|«[^»]*»\\)"],
-  \ ["Bracket", "\\\[",         "]",    "p6EscCloseBracket", "\\%(\\\\\\@1<!\\\\]\\|\\[^\\]]*]\\)"],
-  \ ["Paren",   "\\s\\@1<=(",   ")",    "p6EscCloseParen",   "\\%(\\\\\\@1<!\\\\)\\|([^)]*)\\)"],
+  \ ["Curly",   "{",            "}",    "rakuEscCloseCurly",   "\\%(\\\\\\@1<!\\\\}\\|{[^}]*}\\)"],
+  \ ["Angle",   "<",            ">",    "rakuEscCloseAngle",   "\\%(\\\\\\@1<!\\\\>\\|<[^>]*>\\)"],
+  \ ["French",  "«",            "»",    "rakuEscCloseFrench",  "\\%(\\\\\\@1<!\\\\»\\|«[^»]*»\\)"],
+  \ ["Bracket", "\\\[",         "]",    "rakuEscCloseBracket", "\\%(\\\\\\@1<!\\\\]\\|\\[^\\]]*]\\)"],
+  \ ["Paren",   "\\s\\@1<=(",   ")",    "rakuEscCloseParen",   "\\%(\\\\\\@1<!\\\\)\\|([^)]*)\\)"],
 \ ]
 let s:all_delims = s:plain_delims + s:bracketing_delims
 
 for [s:name, s:start_delim, s:end_delim, s:end_group, s:skip] in s:all_delims
-    exec "syn region p6StringQ matchgroup=p6Quote start=\"".s:start_delim."\" end=\"".s:end_delim."\" contained"
-    exec "syn region p6StringQ_q matchgroup=p6Quote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contains=@p6Interp_q,".s:end_group." contained"
-    exec "syn region p6StringQ_qww matchgroup=p6Quote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contains=@p6Interp_q,p6StringSQ,p6StringDQ".s:end_group." contained"
-    exec "syn region p6StringQ_qq matchgroup=p6Quote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contains=@p6Interp_qq,".s:end_group." contained"
-    exec "syn region p6StringQ_to matchgroup=p6Quote start=\"".s:start_delim."\\z([^".s:end_delim."]\\+\\)".s:end_delim."\" end=\"^\\s*\\z1$\" contained"
-    exec "syn region p6StringQ_qto matchgroup=p6Quote start=\"".s:start_delim."\\z([^".s:end_delim."]\\+\\)".s:end_delim."\" skip=\"".s:skip."\" end=\"^\\s*\\z1$\" contains=@p6Interp_q,".s:end_group." contained"
-    exec "syn region p6StringQ_qqto matchgroup=p6Quote start=\"".s:start_delim."\\z(\[^".s:end_delim."]\\+\\)".s:end_delim."\" skip=\"".s:skip."\" end=\"^\\s*\\z1$\" contains=@p6Interp_qq,".s:end_group." contained"
+    exec "syn region rakuStringQ matchgroup=rakuQuote start=\"".s:start_delim."\" end=\"".s:end_delim."\" contained"
+    exec "syn region rakuStringQ_q matchgroup=rakuQuote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contains=@rakuInterp_q,".s:end_group." contained"
+    exec "syn region rakuStringQ_qww matchgroup=rakuQuote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contains=@rakuInterp_q,rakuStringSQ,rakuStringDQ".s:end_group." contained"
+    exec "syn region rakuStringQ_qq matchgroup=rakuQuote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contains=@rakuInterp_qq,".s:end_group." contained"
+    exec "syn region rakuStringQ_to matchgroup=rakuQuote start=\"".s:start_delim."\\z([^".s:end_delim."]\\+\\)".s:end_delim."\" end=\"^\\s*\\z1$\" contained"
+    exec "syn region rakuStringQ_qto matchgroup=rakuQuote start=\"".s:start_delim."\\z([^".s:end_delim."]\\+\\)".s:end_delim."\" skip=\"".s:skip."\" end=\"^\\s*\\z1$\" contains=@rakuInterp_q,".s:end_group." contained"
+    exec "syn region rakuStringQ_qqto matchgroup=rakuQuote start=\"".s:start_delim."\\z(\[^".s:end_delim."]\\+\\)".s:end_delim."\" skip=\"".s:skip."\" end=\"^\\s*\\z1$\" contains=@rakuInterp_qq,".s:end_group." contained"
 
     if exists("raku_embedded_pir") || exists("raku_extended_all")
-        exec "syn region p6StringQ_PIR matchgroup=p6Quote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contains=@p6PIR,".s:end_group." contained"
+        exec "syn region rakuStringQ_PIR matchgroup=rakuQuote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contains=@rakuPIR,".s:end_group." contained"
     endif
 endfor
 unlet s:name s:start_delim s:end_delim s:end_group s:skip s:plain_delims s:all_delims
 
 " :key
-syn match p6Operator display ":\@1<!::\@!!\?" nextgroup=p6Key,p6StringAngleFixed,p6StringAngles,p6StringFrench
-syn match p6Key display "\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)" contained nextgroup=p6StringAngleFixed,p6StringAngles,p6StringFrench
+syn match rakuOperator display ":\@1<!::\@!!\?" nextgroup=rakuKey,rakuStringAngleFixed,rakuStringAngles,rakuStringFrench
+syn match rakuKey display "\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)" contained nextgroup=rakuStringAngleFixed,rakuStringAngles,rakuStringFrench
 
 " Regexes and grammars
 
-syn match p6RegexName    display "\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\?" nextgroup=p6RegexBlockCrap skipwhite skipempty contained
-syn match p6RegexBlockCrap "[^{]*" nextgroup=p6RegexBlock skipwhite skipempty transparent contained
+syn match rakuRegexName    display "\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\?" nextgroup=rakuRegexBlockCrap skipwhite skipempty contained
+syn match rakuRegexBlockCrap "[^{]*" nextgroup=rakuRegexBlock skipwhite skipempty transparent contained
 
-syn region p6RegexBlock
-    \ matchgroup=p6Normal
+syn region rakuRegexBlock
+    \ matchgroup=rakuNormal
     \ start="{"
     \ end="}"
     \ contained
-    \ contains=@p6Regexen,@p6Variables
+    \ contains=@rakuRegexen,@rakuVariables
 
 " Perl 6 regex bits
 
-syn cluster p6Regexen
-    \ add=p6RxMeta
-    \ add=p6RxEscape
-    \ add=p6EscCodePoint
-    \ add=p6EscHex
-    \ add=p6EscOct
-    \ add=p6EscNull
-    \ add=p6RxAnchor
-    \ add=p6RxCapture
-    \ add=p6RxGroup
-    \ add=p6RxAlternation
-    \ add=p6RxBoundary
-    \ add=p6RxAdverb
-    \ add=p6RxAdverbArg
-    \ add=p6RxStorage
-    \ add=p6RxAssertion
-    \ add=p6RxAssertGroup
-    \ add=p6RxQuoteWords
-    \ add=p6RxClosure
-    \ add=p6RxStringSQ
-    \ add=p6RxStringDQ
-    \ add=p6Comment
-    \ add=p6BracketComment
-    \ add=p6MatchVarSigil
+syn cluster rakuRegexen
+    \ add=rakuRxMeta
+    \ add=rakuRxEscape
+    \ add=rakuEscCodePoint
+    \ add=rakuEscHex
+    \ add=rakuEscOct
+    \ add=rakuEscNull
+    \ add=rakuRxAnchor
+    \ add=rakuRxCapture
+    \ add=rakuRxGroup
+    \ add=rakuRxAlternation
+    \ add=rakuRxBoundary
+    \ add=rakuRxAdverb
+    \ add=rakuRxAdverbArg
+    \ add=rakuRxStorage
+    \ add=rakuRxAssertion
+    \ add=rakuRxAssertGroup
+    \ add=rakuRxQuoteWords
+    \ add=rakuRxClosure
+    \ add=rakuRxStringSQ
+    \ add=rakuRxStringDQ
+    \ add=rakuComment
+    \ add=rakuBracketComment
+    \ add=rakuMatchVarSigil
 
-syn match p6RxMeta        display contained ".\%([A-Za-z_\xC0-\xFF0-9]\|\s\)\@1<!"
-syn match p6RxAnchor      display contained "[$^]"
-syn match p6RxEscape      display contained "\\\S"
-syn match p6RxCapture     display contained "[()]"
-syn match p6RxAlternation display contained "|"
-syn match p6RxRange       display contained "\.\."
+syn match rakuRxMeta        display contained ".\%([A-Za-z_\xC0-\xFF0-9]\|\s\)\@1<!"
+syn match rakuRxAnchor      display contained "[$^]"
+syn match rakuRxEscape      display contained "\\\S"
+syn match rakuRxCapture     display contained "[()]"
+syn match rakuRxAlternation display contained "|"
+syn match rakuRxRange       display contained "\.\."
 
 " misc escapes
-syn match p6EscOctOld    display "\\[1-9]\d\{1,2}" contained
-syn match p6EscNull      display "\\0\d\@!" contained
-syn match p6EscCodePoint display "\\[cC]" contained nextgroup=p6CodePoint
-syn match p6EscHex       display "\\[xX]" contained nextgroup=p6HexSequence
-syn match p6EscOct       display "\\o" contained nextgroup=p6OctSequence
-syn match p6EscQQ        display "\\qq" contained nextgroup=p6QQSequence
-syn match p6EscOpenCurly display "\\{" contained
-syn match p6EscHash      display "\\#" contained
-syn match p6EscBackSlash display "\\\\" contained
+syn match rakuEscOctOld    display "\\[1-9]\d\{1,2}" contained
+syn match rakuEscNull      display "\\0\d\@!" contained
+syn match rakuEscCodePoint display "\\[cC]" contained nextgroup=rakuCodePoint
+syn match rakuEscHex       display "\\[xX]" contained nextgroup=rakuHexSequence
+syn match rakuEscOct       display "\\o" contained nextgroup=rakuOctSequence
+syn match rakuEscQQ        display "\\qq" contained nextgroup=rakuQQSequence
+syn match rakuEscOpenCurly display "\\{" contained
+syn match rakuEscHash      display "\\#" contained
+syn match rakuEscBackSlash display "\\\\" contained
 
-syn region p6QQSequence
-    \ matchgroup=p6Escape
+syn region rakuQQSequence
+    \ matchgroup=rakuEscape
     \ start="\["
     \ skip="\[[^\]]*]"
     \ end="]"
     \ contained transparent
-    \ contains=@p6Interp_qq
+    \ contains=@rakuInterp_qq
 
-syn match p6CodePoint   display "\%(\d\+\|\S\)" contained
-syn region p6CodePoint
-    \ matchgroup=p6Escape
+syn match rakuCodePoint   display "\%(\d\+\|\S\)" contained
+syn region rakuCodePoint
+    \ matchgroup=rakuEscape
     \ start="\["
     \ end="]"
     \ contained
 
-syn match p6HexSequence display "\x\+" contained
-syn region p6HexSequence
-    \ matchgroup=p6Escape
+syn match rakuHexSequence display "\x\+" contained
+syn region rakuHexSequence
+    \ matchgroup=rakuEscape
     \ start="\["
     \ end="]"
     \ contained
 
-syn match p6OctSequence display "\o\+" contained
-syn region p6OctSequence
-    \ matchgroup=p6Escape
+syn match rakuOctSequence display "\o\+" contained
+syn region rakuOctSequence
+    \ matchgroup=rakuEscape
     \ start="\["
     \ end="]"
     \ contained
 
 " $<match>, @<match>
-syn region p6MatchVarSigil
-    \ matchgroup=p6Variable
+syn region rakuMatchVarSigil
+    \ matchgroup=rakuVariable
     \ start="[$@]\%(<<\@!\)\@="
     \ end=">\@1<="
-    \ contains=p6MatchVar
+    \ contains=rakuMatchVar
 
-syn region p6MatchVar
-    \ matchgroup=p6Twigil
+syn region rakuMatchVar
+    \ matchgroup=rakuTwigil
     \ start="<"
     \ end=">"
     \ contained
 
-syn region p6RxClosure
-    \ matchgroup=p6Normal
+syn region rakuRxClosure
+    \ matchgroup=rakuNormal
     \ start="{"
     \ end="}"
     \ contained
-    \ containedin=p6RxClosure
+    \ containedin=rakuRxClosure
     \ contains=TOP
-syn region p6RxGroup
-    \ matchgroup=p6StringSpecial2
+syn region rakuRxGroup
+    \ matchgroup=rakuStringSpecial2
     \ start="\["
     \ end="]"
     \ contained
-    \ contains=@p6Regexen,@p6Variables,p6MatchVarSigil
-syn region p6RxAssertion
-    \ matchgroup=p6StringSpecial2
+    \ contains=@rakuRegexen,@rakuVariables,rakuMatchVarSigil
+syn region rakuRxAssertion
+    \ matchgroup=rakuStringSpecial2
     \ start="<\%(?\?\%(before\|after\)\|\%(\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)=\)\|[+?*]\)\?"
     \ end=">"
     \ contained
-    \ contains=@p6Regexen,p6Identifier,@p6Variables,p6RxCharClass,p6RxAssertCall
-syn region p6RxAssertGroup
-    \ matchgroup=p6StringSpecial2
+    \ contains=@rakuRegexen,rakuIdentifier,@rakuVariables,rakuRxCharClass,rakuRxAssertCall
+syn region rakuRxAssertGroup
+    \ matchgroup=rakuStringSpecial2
     \ start="<\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)=\["
     \ skip="\\\@1<!\\]"
     \ end="]"
     \ contained
-syn match p6RxAssertCall display "\%(::\|\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\)" contained nextgroup=p6RxAssertArgs
-syn region p6RxAssertArgs
+syn match rakuRxAssertCall display "\%(::\|\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\)" contained nextgroup=rakuRxAssertArgs
+syn region rakuRxAssertArgs
     \ start="("
     \ end=")"
     \ contained keepend
     \ contains=TOP
-syn region p6RxAssertArgs
+syn region rakuRxAssertArgs
     \ start=":"
     \ end="\ze>"
     \ contained keepend
     \ contains=TOP
-syn match p6RxBoundary display contained "\%([«»]\|<<\|>>\)"
-syn region p6RxCharClass
-    \ matchgroup=p6StringSpecial2
+syn match rakuRxBoundary display contained "\%([«»]\|<<\|>>\)"
+syn region rakuRxCharClass
+    \ matchgroup=rakuStringSpecial2
     \ start="\%(<[-!+?]\?\)\@2<=\["
     \ skip="\\]"
     \ end="]"
     \ contained
-    \ contains=p6RxRange,p6RxEscape,p6EscHex,p6EscOct,p6EscCodePoint,p6EscNull
-syn region p6RxQuoteWords
-    \ matchgroup=p6StringSpecial2
+    \ contains=rakuRxRange,rakuRxEscape,rakuEscHex,rakuEscOct,rakuEscCodePoint,rakuEscNull
+syn region rakuRxQuoteWords
+    \ matchgroup=rakuStringSpecial2
     \ start="<\s"
     \ end="\s\?>"
     \ contained
-syn region p6RxAdverb
+syn region rakuRxAdverb
     \ start="\ze\z(:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\)"
     \ end="\z1\zs"
     \ contained keepend
     \ contains=TOP
-syn region p6RxAdverbArg
+syn region rakuRxAdverbArg
     \ start="\%(:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\)\@<=("
     \ skip="([^)]\{-})"
     \ end=")"
     \ contained
     \ keepend
     \ contains=TOP
-syn region p6RxStorage
-    \ matchgroup=p6Operator
+syn region rakuRxStorage
+    \ matchgroup=rakuOperator
     \ start="\%(^\s*\)\@<=:\%(my\>\|temp\>\)\@="
     \ end="$"
     \ contains=TOP
@@ -678,129 +678,129 @@ syn region p6RxStorage
     \ keepend
 
 " 'string' inside a regex
-syn region p6RxStringSQ
-    \ matchgroup=p6Quote
+syn region rakuRxStringSQ
+    \ matchgroup=rakuQuote
     \ start="'"
     \ skip="\\\@1<!\\'"
     \ end="'"
     \ contained
-    \ contains=p6EscQuote,p6EscBackSlash
+    \ contains=rakuEscQuote,rakuEscBackSlash
 
 " "string" inside a regex
-syn region p6RxStringDQ
-    \ matchgroup=p6Quote
+syn region rakuRxStringDQ
+    \ matchgroup=rakuQuote
     \ start=+"+
     \ skip=+\\\@1<!\\"+
     \ end=+"+
     \ contained
-    \ contains=p6EscDoubleQuote,p6EscBackSlash,@p6Interp_qq
+    \ contains=rakuEscDoubleQuote,rakuEscBackSlash,@rakuInterp_qq
 
 " $!, $var, $!var, $::var, $package::var $*::package::var, etc
 " Thus must come after the matches for the "$" regex anchor, but before
 " the match for the $ regex delimiter
-syn cluster p6Variables
-    \ add=p6VarSlash
-    \ add=p6VarExclam
-    \ add=p6VarMatch
-    \ add=p6VarNum
-    \ add=p6Variable
+syn cluster rakuVariables
+    \ add=rakuVarSlash
+    \ add=rakuVarExclam
+    \ add=rakuVarMatch
+    \ add=rakuVarNum
+    \ add=rakuVariable
 
-syn match p6BareSigil    display "[@$%&]\%(\s*\%([,)}=]\|where\>\)\)\@="
-syn match p6VarSlash     display "\$/"
-syn match p6VarExclam    display "\$!"
-syn match p6VarMatch     display "\$¢"
-syn match p6VarNum       display "\$\d\+"
-syn match p6Variable     display "self"
-syn match p6Variable     display "[@$%&]\?[@&$%]\$*\%(::\|\%(\%([.^*?=!~]\|:\@1<!::\@!\)[A-Za-z_\xC0-\xFF]\)\|[A-Za-z_\xC0-\xFF]\)\@=" nextgroup=p6Twigil,p6VarName,p6PackageScope
-syn match p6VarName      display "\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)" nextgroup=p6PostHyperOp contained
-syn match p6Close        display "[\])]" transparent nextgroup=p6PostHyperOp
-syn match p6PostHyperOp  display "\%(»\|>>\)" contained
-syn match p6Twigil       display "\%([.^*?=!~]\|:\@1<!::\@!\)[A-Za-z_\xC0-\xFF]\@=" nextgroup=p6PackageScope,p6VarName contained
-syn match p6PackageScope display "\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\?::" nextgroup=p6PackageScope,p6VarName contained
+syn match rakuBareSigil    display "[@$%&]\%(\s*\%([,)}=]\|where\>\)\)\@="
+syn match rakuVarSlash     display "\$/"
+syn match rakuVarExclam    display "\$!"
+syn match rakuVarMatch     display "\$¢"
+syn match rakuVarNum       display "\$\d\+"
+syn match rakuVariable     display "self"
+syn match rakuVariable     display "[@$%&]\?[@&$%]\$*\%(::\|\%(\%([.^*?=!~]\|:\@1<!::\@!\)[A-Za-z_\xC0-\xFF]\)\|[A-Za-z_\xC0-\xFF]\)\@=" nextgroup=rakuTwigil,rakuVarName,rakuPackageScope
+syn match rakuVarName      display "\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)" nextgroup=rakuPostHyperOp contained
+syn match rakuClose        display "[\])]" transparent nextgroup=rakuPostHyperOp
+syn match rakuPostHyperOp  display "\%(»\|>>\)" contained
+syn match rakuTwigil       display "\%([.^*?=!~]\|:\@1<!::\@!\)[A-Za-z_\xC0-\xFF]\@=" nextgroup=rakuPackageScope,rakuVarName contained
+syn match rakuPackageScope display "\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\?::" nextgroup=rakuPackageScope,rakuVarName contained
 
 " Perl 6 regex regions
 
-syn match p6MatchStart_m    display "\.\@1<!\<\%(mm\?\|rx\)\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\)\@!" skipwhite skipempty nextgroup=p6MatchAdverbs_m
-syn match p6MatchStart_s    display "\.\@1<!\<[sS]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\)\@!" skipwhite skipempty nextgroup=p6MatchAdverbs_s
-syn match p6MatchStart_tr   display "\.\@1<!\<tr\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\)\@!" skipwhite skipempty nextgroup=p6MatchAdverbs_tr
-syn match p6MatchAdverbs_m  "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=p6Match
-syn match p6MatchAdverbs_s  "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=p6Substitution
-syn match p6MatchAdverbs_tr "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=p6Transliteration
+syn match rakuMatchStart_m    display "\.\@1<!\<\%(mm\?\|rx\)\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\)\@!" skipwhite skipempty nextgroup=rakuMatchAdverbs_m
+syn match rakuMatchStart_s    display "\.\@1<!\<[sS]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\)\@!" skipwhite skipempty nextgroup=rakuMatchAdverbs_s
+syn match rakuMatchStart_tr   display "\.\@1<!\<tr\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\)\@!" skipwhite skipempty nextgroup=rakuMatchAdverbs_tr
+syn match rakuMatchAdverbs_m  "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=rakuMatch
+syn match rakuMatchAdverbs_s  "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=rakuSubstitution
+syn match rakuMatchAdverbs_tr "\%(\_s*:!\?\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%(([^)]*)\)\?\)*" contained transparent skipwhite skipempty nextgroup=rakuTransliteration
 
 " /foo/
-syn region p6MatchBare
-    \ matchgroup=p6Quote
+syn region rakuMatchBare
+    \ matchgroup=rakuQuote
     \ start="/\@1<!\%(\%(\_^\|[!\[,=~|&/:({]\|\^\?fff\?\^\?\|=>\|\<\%(if\|unless\|while\|when\|where\|so\)\)\s*\)\@<=/[/=]\@!"
     \ skip="\\/"
     \ end="/"
-    \ contains=@p6Regexen,p6Variable,p6VarExclam,p6VarMatch,p6VarNum
+    \ contains=@rakuRegexen,rakuVariable,rakuVarExclam,rakuVarMatch,rakuVarNum
 
 " m/foo/, m$foo$, m!foo!, etc
-syn region p6Match
-    \ matchgroup=p6Quote
+syn region rakuMatch
+    \ matchgroup=rakuQuote
     \ start=+\z([/!$,|`"]\)+
     \ skip="\\\z1"
     \ end="\z1"
     \ contained
-    \ contains=@p6Regexen,p6Variable,p6VarNum
+    \ contains=@rakuRegexen,rakuVariable,rakuVarNum
 
 " m<foo>, m«foo», m{foo}, etc
 for [s:name, s:start_delim, s:end_delim, s:end_group, s:skip] in s:bracketing_delims
-    exec "syn region p6Match matchgroup=p6Quote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contained keepend contains=@p6Regexen,@p6Variables"
+    exec "syn region rakuMatch matchgroup=rakuQuote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contained keepend contains=@rakuRegexen,@rakuVariables"
 endfor
 unlet s:name s:start_delim s:end_delim s:end_group s:skip
 
 " Substitutions
 
 " s/foo//, s$foo$$, s!foo!!, etc
-syn region p6Substitution
-    \ matchgroup=p6Quote
+syn region rakuSubstitution
+    \ matchgroup=rakuQuote
     \ start=+\z([/!$,|`"]\)+
     \ skip="\\\z1"
     \ end="\z1"me=e-1
     \ contained
-    \ contains=@p6Regexen,p6Variable,p6VarNum
-    \ nextgroup=p6Replacement
+    \ contains=@rakuRegexen,rakuVariable,rakuVarNum
+    \ nextgroup=rakuReplacement
 
-syn region p6Replacement
-    \ matchgroup=p6Quote
+syn region rakuReplacement
+    \ matchgroup=rakuQuote
     \ start="\z(.\)"
     \ skip="\\\z1"
     \ end="\z1"
     \ contained
-    \ contains=@p6Interp_qq
+    \ contains=@rakuInterp_qq
 
 " s<foo><bar>, s«foo»«bar», s{foo}{bar}, etc
 for [s:name, s:start_delim, s:end_delim, s:end_group, s:skip] in s:bracketing_delims
-    exec "syn region p6Substitution matchgroup=p6Quote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contained keepend contains=@p6Regexen,@p6Variables nextgroup=p6Repl".s:name
-    exec "syn region p6Repl".s:name." matchgroup=p6Quote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contained keepend contains=@p6Interp_qq"
+    exec "syn region rakuSubstitution matchgroup=rakuQuote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contained keepend contains=@rakuRegexen,@rakuVariables nextgroup=rakuRepl".s:name
+    exec "syn region rakuRepl".s:name." matchgroup=rakuQuote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contained keepend contains=@rakuInterp_qq"
 endfor
 unlet s:name s:start_delim s:end_delim s:end_group s:skip
 
 " Transliteration
 
 " tr/foo/bar/, tr|foo|bar, etc
-syn region p6Transliteration
-    \ matchgroup=p6Quote
+syn region rakuTransliteration
+    \ matchgroup=rakuQuote
     \ start=+\z([/!$,|`"]\)+
     \ skip="\\\z1"
     \ end="\z1"me=e-1
     \ contained
-    \ contains=p6RxRange
-    \ nextgroup=p6TransRepl
+    \ contains=rakuRxRange
+    \ nextgroup=rakuTransRepl
 
-syn region p6TransRepl
-    \ matchgroup=p6Quote
+syn region rakuTransRepl
+    \ matchgroup=rakuQuote
     \ start="\z(.\)"
     \ skip="\\\z1"
     \ end="\z1"
     \ contained
-    \ contains=@p6Interp_qq,p6RxRange
+    \ contains=@rakuInterp_qq,rakuRxRange
 
 " tr<foo><bar>, tr«foo»«bar», tr{foo}{bar}, etc
 for [s:name, s:start_delim, s:end_delim, s:end_group, s:skip] in s:bracketing_delims
-    exec "syn region p6Transliteration matchgroup=p6Quote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contained keepend contains=p6RxRange nextgroup=p6TransRepl".s:name
-    exec "syn region p6TransRepl".s:name." matchgroup=p6Quote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contained keepend contains=@p6Interp_qq,p6RxRange"
+    exec "syn region rakuTransliteration matchgroup=rakuQuote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contained keepend contains=rakuRxRange nextgroup=rakuTransRepl".s:name
+    exec "syn region rakuTransRepl".s:name." matchgroup=rakuQuote start=\"".s:start_delim."\" skip=\"".s:skip."\" end=\"".s:end_delim."\" contained keepend contains=@rakuInterp_qq,rakuRxRange"
 endfor
 unlet s:name s:start_delim s:end_delim s:end_group s:skip s:bracketing_delims
 
@@ -808,932 +808,932 @@ if exists("raku_perl5_regexes") || exists("raku_extended_all")
 
 " Perl 5 regex regions
 
-syn cluster p6RegexP5Base
-    \ add=p6RxP5Escape
-    \ add=p6RxP5Oct
-    \ add=p6RxP5Hex
-    \ add=p6RxP5EscMeta
-    \ add=p6RxP5CodePoint
-    \ add=p6RxP5Prop
+syn cluster rakuRegexP5Base
+    \ add=rakuRxP5Escape
+    \ add=rakuRxP5Oct
+    \ add=rakuRxP5Hex
+    \ add=rakuRxP5EscMeta
+    \ add=rakuRxP5CodePoint
+    \ add=rakuRxP5Prop
 
 " normal regex stuff
-syn cluster p6RegexP5
-    \ add=@p6RegexP5Base
-    \ add=p6RxP5Quantifier
-    \ add=p6RxP5Meta
-    \ add=p6RxP5QuoteMeta
-    \ add=p6RxP5ParenMod
-    \ add=p6RxP5Verb
-    \ add=p6RxP5Count
-    \ add=p6RxP5Named
-    \ add=p6RxP5ReadRef
-    \ add=p6RxP5WriteRef
-    \ add=p6RxP5CharClass
-    \ add=p6RxP5Anchor
+syn cluster rakuRegexP5
+    \ add=@rakuRegexP5Base
+    \ add=rakuRxP5Quantifier
+    \ add=rakuRxP5Meta
+    \ add=rakuRxP5QuoteMeta
+    \ add=rakuRxP5ParenMod
+    \ add=rakuRxP5Verb
+    \ add=rakuRxP5Count
+    \ add=rakuRxP5Named
+    \ add=rakuRxP5ReadRef
+    \ add=rakuRxP5WriteRef
+    \ add=rakuRxP5CharClass
+    \ add=rakuRxP5Anchor
 
 " inside character classes
-syn cluster p6RegexP5Class
-    \ add=@p6RegexP5Base
-    \ add=p6RxP5Posix
-    \ add=p6RxP5Range
+syn cluster rakuRegexP5Class
+    \ add=@rakuRegexP5Base
+    \ add=rakuRxP5Posix
+    \ add=rakuRxP5Range
 
-syn match p6RxP5Escape     display contained "\\\S"
-syn match p6RxP5CodePoint  display contained "\\c\S\@=" nextgroup=p6RxP5CPId
-syn match p6RxP5CPId       display contained "\S"
-syn match p6RxP5Oct        display contained "\\\%(\o\{1,3}\)\@=" nextgroup=p6RxP5OctSeq
-syn match p6RxP5OctSeq     display contained "\o\{1,3}"
-syn match p6RxP5Anchor     display contained "[\^$]"
-syn match p6RxP5Hex        display contained "\\x\%({\x\+}\|\x\{1,2}\)\@=" nextgroup=p6RxP5HexSeq
-syn match p6RxP5HexSeq     display contained "\x\{1,2}"
-syn region p6RxP5HexSeq
-    \ matchgroup=p6RxP5Escape
+syn match rakuRxP5Escape     display contained "\\\S"
+syn match rakuRxP5CodePoint  display contained "\\c\S\@=" nextgroup=rakuRxP5CPId
+syn match rakuRxP5CPId       display contained "\S"
+syn match rakuRxP5Oct        display contained "\\\%(\o\{1,3}\)\@=" nextgroup=rakuRxP5OctSeq
+syn match rakuRxP5OctSeq     display contained "\o\{1,3}"
+syn match rakuRxP5Anchor     display contained "[\^$]"
+syn match rakuRxP5Hex        display contained "\\x\%({\x\+}\|\x\{1,2}\)\@=" nextgroup=rakuRxP5HexSeq
+syn match rakuRxP5HexSeq     display contained "\x\{1,2}"
+syn region rakuRxP5HexSeq
+    \ matchgroup=rakuRxP5Escape
     \ start="{"
     \ end="}"
     \ contained
-syn region p6RxP5Named
-    \ matchgroup=p6RxP5Escape
+syn region rakuRxP5Named
+    \ matchgroup=rakuRxP5Escape
     \ start="\%(\\N\)\@2<={"
     \ end="}"
     \ contained
-syn match p6RxP5Quantifier display contained "\%([+*]\|(\@1<!?\)"
-syn match p6RxP5ReadRef    display contained "\\[1-9]\d\@!"
-syn match p6RxP5ReadRef    display contained "\[A-Za-z_\xC0-\xFF0-9]<\@=" nextgroup=p6RxP5ReadRefId
-syn region p6RxP5ReadRefId
-    \ matchgroup=p6RxP5Escape
+syn match rakuRxP5Quantifier display contained "\%([+*]\|(\@1<!?\)"
+syn match rakuRxP5ReadRef    display contained "\\[1-9]\d\@!"
+syn match rakuRxP5ReadRef    display contained "\[A-Za-z_\xC0-\xFF0-9]<\@=" nextgroup=rakuRxP5ReadRefId
+syn region rakuRxP5ReadRefId
+    \ matchgroup=rakuRxP5Escape
     \ start="<"
     \ end=">"
     \ contained
-syn match p6RxP5WriteRef   display contained "\\g\%(\d\|{\)\@=" nextgroup=p6RxP5WriteRefId
-syn match p6RxP5WriteRefId display contained "\d\+"
-syn region p6RxP5WriteRefId
-    \ matchgroup=p6RxP5Escape
+syn match rakuRxP5WriteRef   display contained "\\g\%(\d\|{\)\@=" nextgroup=rakuRxP5WriteRefId
+syn match rakuRxP5WriteRefId display contained "\d\+"
+syn region rakuRxP5WriteRefId
+    \ matchgroup=rakuRxP5Escape
     \ start="{"
     \ end="}"
     \ contained
-syn match p6RxP5Prop       display contained "\\[pP]\%(\a\|{\)\@=" nextgroup=p6RxP5PropId
-syn match p6RxP5PropId     display contained "\a"
-syn region p6RxP5PropId
-    \ matchgroup=p6RxP5Escape
+syn match rakuRxP5Prop       display contained "\\[pP]\%(\a\|{\)\@=" nextgroup=rakuRxP5PropId
+syn match rakuRxP5PropId     display contained "\a"
+syn region rakuRxP5PropId
+    \ matchgroup=rakuRxP5Escape
     \ start="{"
     \ end="}"
     \ contained
-syn match p6RxP5Meta       display contained "[(|).]"
-syn match p6RxP5ParenMod   display contained "(\@1<=?\@=" nextgroup=p6RxP5Mod,p6RxP5ModName,p6RxP5Code
-syn match p6RxP5Mod        display contained "?\%(<\?=\|<\?!\|[#:|]\)"
-syn match p6RxP5Mod        display contained "?-\?[impsx]\+"
-syn match p6RxP5Mod        display contained "?\%([-+]\?\d\+\|R\)"
-syn match p6RxP5Mod        display contained "?(DEFINE)"
-syn match p6RxP5Mod        display contained "?\%(&\|P[>=]\)" nextgroup=p6RxP5ModDef
-syn match p6RxP5ModDef     display contained "\h\w*"
-syn region p6RxP5ModName
-    \ matchgroup=p6StringSpecial
+syn match rakuRxP5Meta       display contained "[(|).]"
+syn match rakuRxP5ParenMod   display contained "(\@1<=?\@=" nextgroup=rakuRxP5Mod,rakuRxP5ModName,rakuRxP5Code
+syn match rakuRxP5Mod        display contained "?\%(<\?=\|<\?!\|[#:|]\)"
+syn match rakuRxP5Mod        display contained "?-\?[impsx]\+"
+syn match rakuRxP5Mod        display contained "?\%([-+]\?\d\+\|R\)"
+syn match rakuRxP5Mod        display contained "?(DEFINE)"
+syn match rakuRxP5Mod        display contained "?\%(&\|P[>=]\)" nextgroup=rakuRxP5ModDef
+syn match rakuRxP5ModDef     display contained "\h\w*"
+syn region rakuRxP5ModName
+    \ matchgroup=rakuStringSpecial
     \ start="?'"
     \ end="'"
     \ contained
-syn region p6RxP5ModName
-    \ matchgroup=p6StringSpecial
+syn region rakuRxP5ModName
+    \ matchgroup=rakuStringSpecial
     \ start="?P\?<"
     \ end=">"
     \ contained
-syn region p6RxP5Code
-    \ matchgroup=p6StringSpecial
+syn region rakuRxP5Code
+    \ matchgroup=rakuStringSpecial
     \ start="??\?{"
     \ end="})\@="
     \ contained
     \ contains=TOP
-syn match p6RxP5EscMeta    display contained "\\[?*.{}()[\]|\^$]"
-syn match p6RxP5Count      display contained "\%({\d\+\%(,\%(\d\+\)\?\)\?}\)\@=" nextgroup=p6RxP5CountId
-syn region p6RxP5CountId
-    \ matchgroup=p6RxP5Escape
+syn match rakuRxP5EscMeta    display contained "\\[?*.{}()[\]|\^$]"
+syn match rakuRxP5Count      display contained "\%({\d\+\%(,\%(\d\+\)\?\)\?}\)\@=" nextgroup=rakuRxP5CountId
+syn region rakuRxP5CountId
+    \ matchgroup=rakuRxP5Escape
     \ start="{"
     \ end="}"
     \ contained
-syn match p6RxP5Verb       display contained "(\@1<=\*\%(\%(PRUNE\|SKIP\|THEN\)\%(:[^)]*\)\?\|\%(MARK\|\):[^)]*\|COMMIT\|F\%(AIL\)\?\|ACCEPT\)"
-syn region p6RxP5QuoteMeta
-    \ matchgroup=p6RxP5Escape
+syn match rakuRxP5Verb       display contained "(\@1<=\*\%(\%(PRUNE\|SKIP\|THEN\)\%(:[^)]*\)\?\|\%(MARK\|\):[^)]*\|COMMIT\|F\%(AIL\)\?\|ACCEPT\)"
+syn region rakuRxP5QuoteMeta
+    \ matchgroup=rakuRxP5Escape
     \ start="\\Q"
     \ end="\\E"
     \ contained
-    \ contains=@p6Variables,p6EscBackSlash
-syn region p6RxP5CharClass
-    \ matchgroup=p6StringSpecial
+    \ contains=@rakuVariables,rakuEscBackSlash
+syn region rakuRxP5CharClass
+    \ matchgroup=rakuStringSpecial
     \ start="\[\^\?"
     \ skip="\\]"
     \ end="]"
     \ contained
-    \ contains=@p6RegexP5Class
-syn region p6RxP5Posix
-    \ matchgroup=p6RxP5Escape
+    \ contains=@rakuRegexP5Class
+syn region rakuRxP5Posix
+    \ matchgroup=rakuRxP5Escape
     \ start="\[:"
     \ end=":]"
     \ contained
-syn match p6RxP5Range      display contained "-"
+syn match rakuRxP5Range      display contained "-"
 
 " m:P5//
-syn region p6Match
-    \ matchgroup=p6Quote
+syn region rakuMatch
+    \ matchgroup=rakuQuote
     \ start="\%(\%(::\|[$@%&][.!^:*?]\?\|\.\)\@2<!\<m\s*:P\%(erl\)\?5\s*\)\@<=/"
     \ skip="\\/"
     \ end="/"
-    \ contains=@p6RegexP5,p6Variable,p6VarExclam,p6VarMatch,p6VarNum
+    \ contains=@rakuRegexP5,rakuVariable,rakuVarExclam,rakuVarMatch,rakuVarNum
 
 " m:P5!!
-syn region p6Match
-    \ matchgroup=p6Quote
+syn region rakuMatch
+    \ matchgroup=rakuQuote
     \ start="\%(\%(::\|[$@%&][.!^:*?]\?\|\.\)\@2<!\<m\s*:P\%(erl\)\?5\s*\)\@<=!"
     \ skip="\\!"
     \ end="!"
-    \ contains=@p6RegexP5,p6Variable,p6VarSlash,p6VarMatch,p6VarNum
+    \ contains=@rakuRegexP5,rakuVariable,rakuVarSlash,rakuVarMatch,rakuVarNum
 
 " m:P5$$, m:P5||, etc
-syn region p6Match
-    \ matchgroup=p6Quote
+syn region rakuMatch
+    \ matchgroup=rakuQuote
     \ start="\%(\%(::\|[$@%&][.!^:*?]\?\|\.\)\@2<!\<m\s*:P\%(erl\)\?5\s*\)\@<=\z([\"'`|,$]\)"
     \ skip="\\\z1"
     \ end="\z1"
-    \ contains=@p6RegexP5,@p6Variables
+    \ contains=@rakuRegexP5,@rakuVariables
 
 " m:P5 ()
-syn region p6Match
-    \ matchgroup=p6Quote
+syn region rakuMatch
+    \ matchgroup=rakuQuote
     \ start="\%(\%(::\|[$@%&][.!^:*?]\?\|\.\)\@2<!\<m\s*:P\%(erl\)\?5\s\+\)\@<=()\@!"
     \ skip="\\)"
     \ end=")"
-    \ contains=@p6RegexP5,@p6Variables
+    \ contains=@rakuRegexP5,@rakuVariables
 
 " m:P5[]
-syn region p6Match
-    \ matchgroup=p6Quote
+syn region rakuMatch
+    \ matchgroup=rakuQuote
     \ start="\%(\%(::\|[$@%&][.!^:*?]\?\|\.\)\@2<!\<m\s*:P\%(erl\)\?5\s*\)\@<=[]\@!"
     \ skip="\\]"
     \ end="]"
-    \ contains=@p6RegexP5,@p6Variables
+    \ contains=@rakuRegexP5,@rakuVariables
 
 " m:P5{}
-syn region p6Match
-    \ matchgroup=p6Quote
+syn region rakuMatch
+    \ matchgroup=rakuQuote
     \ start="\%(\%(::\|[$@%&][.!^:*?]\?\|\.\)\@2<!\<m\s*:P\%(erl\)\?5\s*\)\@<={}\@!"
     \ skip="\\}"
     \ end="}"
-    \ contains=@p6RegexP5,p6Variables
+    \ contains=@rakuRegexP5,rakuVariables
 
 " m:P5<>
-syn region p6Match
-    \ matchgroup=p6Quote
+syn region rakuMatch
+    \ matchgroup=rakuQuote
     \ start="\%(\%(::\|[$@%&][.!^:*?]\?\|\.\)\@2<!\<m\s*:P\%(erl\)\?5\s*\)\@<=<>\@!"
     \ skip="\\>"
     \ end=">"
-    \ contains=@p6RegexP5,p6Variables
+    \ contains=@rakuRegexP5,rakuVariables
 
 " m:P5«»
-syn region p6Match
-    \ matchgroup=p6Quote
+syn region rakuMatch
+    \ matchgroup=rakuQuote
     \ start="\%(\%(::\|[$@%&][.!^:*?]\?\|\.\)\@2<!\<m\s*:P\%(erl\)\?5\s*\)\@<=«»\@!"
     \ skip="\\»"
     \ end="»"
-    \ contains=@p6RegexP5,p6Variables
+    \ contains=@rakuRegexP5,rakuVariables
 
 endif
 
 " Comments
 
-syn match p6Attention display "\<\%(ACHTUNG\|ATTN\|ATTENTION\|FIXME\|NB\|TODO\|TBD\|WTF\|XXX\|NOTE\)" contained
+syn match rakuAttention display "\<\%(ACHTUNG\|ATTN\|ATTENTION\|FIXME\|NB\|TODO\|TBD\|WTF\|XXX\|NOTE\)" contained
 
 " normal end-of-line comment
-syn match p6Comment display "#.*" contains=p6Attention
+syn match rakuComment display "#.*" contains=rakuAttention
 
 " Multiline comments. Arbitrary numbers of opening brackets are allowed,
 " but we only define regions for 1 to 3
-syn region p6BracketComment
+syn region rakuBracketComment
     \ start="#[`|=]("
     \ skip="([^)]*)"
     \ end=")"
-    \ contains=p6Attention,p6BracketComment
-syn region p6BracketComment
+    \ contains=rakuAttention,rakuBracketComment
+syn region rakuBracketComment
     \ start="#[`|=]\["
     \ skip="\[[^\]]*]"
     \ end="]"
-    \ contains=p6Attention,p6BracketComment
-syn region p6BracketComment
+    \ contains=rakuAttention,rakuBracketComment
+syn region rakuBracketComment
     \ start="#[`|=]{"
     \ skip="{[^}]*}"
     \ end="}"
-    \ contains=p6Attention,p6BracketComment
-syn region p6BracketComment
+    \ contains=rakuAttention,rakuBracketComment
+syn region rakuBracketComment
     \ start="#[`|=]<"
     \ skip="<[^>]*>"
     \ end=">"
-    \ contains=p6Attention,p6BracketComment
-syn region p6BracketComment
+    \ contains=rakuAttention,rakuBracketComment
+syn region rakuBracketComment
     \ start="#[`|=]«"
     \ skip="«[^»]*»"
     \ end="»"
-    \ contains=p6Attention,p6BracketComment
+    \ contains=rakuAttention,rakuBracketComment
 
 " Comments with double and triple delimiters
-syn region p6BracketComment
-    \ matchgroup=p6BracketComment
+syn region rakuBracketComment
+    \ matchgroup=rakuBracketComment
     \ start="#[`|=](("
     \ skip="((\%([^)\|))\@!]\)*))"
     \ end="))"
-    \ contains=p6Attention,p6BracketComment
-syn region p6BracketComment
-    \ matchgroup=p6BracketComment
+    \ contains=rakuAttention,rakuBracketComment
+syn region rakuBracketComment
+    \ matchgroup=rakuBracketComment
     \ start="#[`|=]((("
     \ skip="(((\%([^)]\|)\%())\)\@!\)*)))"
     \ end=")))"
-    \ contains=p6Attention,p6BracketComment
+    \ contains=rakuAttention,rakuBracketComment
 
-syn region p6BracketComment
-    \ matchgroup=p6BracketComment
+syn region rakuBracketComment
+    \ matchgroup=rakuBracketComment
     \ start="#[`|=]\[\["
     \ skip="\[\[\%([^\]]\|]]\@!\)*]]"
     \ end="]]"
-    \ contains=p6Attention,p6BracketComment
-syn region p6BracketComment
-    \ matchgroup=p6BracketComment
+    \ contains=rakuAttention,rakuBracketComment
+syn region rakuBracketComment
+    \ matchgroup=rakuBracketComment
     \ start="#[`|=]\[\[\["
     \ skip="\[\[\[\%([^\]]\|]\%(]]\)\@!\)*]]]"
     \ end="]]]"
-    \ contains=p6Attention,p6BracketComment
+    \ contains=rakuAttention,rakuBracketComment
 
-syn region p6BracketComment
-    \ matchgroup=p6BracketComment
+syn region rakuBracketComment
+    \ matchgroup=rakuBracketComment
     \ start="#[`|=]{{"
     \ skip="{{\%([^}]\|}}\@!\)*}}"
     \ end="}}"
-    \ contains=p6Attention,p6BracketComment
-syn region p6BracketComment
-    \ matchgroup=p6BracketComment
+    \ contains=rakuAttention,rakuBracketComment
+syn region rakuBracketComment
+    \ matchgroup=rakuBracketComment
     \ start="#[`|=]{{{"
     \ skip="{{{\%([^}]\|}\%(}}\)\@!\)*}}}"
     \ end="}}}"
-    \ contains=p6Attention,p6BracketComment
+    \ contains=rakuAttention,rakuBracketComment
 
-syn region p6BracketComment
-    \ matchgroup=p6BracketComment
+syn region rakuBracketComment
+    \ matchgroup=rakuBracketComment
     \ start="#[`|=]<<"
     \ skip="<<\%([^>]\|>>\@!\)*>>"
     \ end=">>"
-    \ contains=p6Attention,p6BracketComment
-syn region p6BracketComment
-    \ matchgroup=p6BracketComment
+    \ contains=rakuAttention,rakuBracketComment
+syn region rakuBracketComment
+    \ matchgroup=rakuBracketComment
     \ start="#[`|=]<<<"
     \ skip="<<<\%([^>]\|>\%(>>\)\@!\)*>>>"
     \ end=">>>"
-    \ contains=p6Attention,p6BracketComment
+    \ contains=rakuAttention,rakuBracketComment
 
-syn region p6BracketComment
-    \ matchgroup=p6BracketComment
+syn region rakuBracketComment
+    \ matchgroup=rakuBracketComment
     \ start="#[`|=]««"
     \ skip="««\%([^»]\|»»\@!\)*»»"
     \ end="»»"
-    \ contains=p6Attention,p6BracketComment
-syn region p6BracketComment
-    \ matchgroup=p6BracketComment
+    \ contains=rakuAttention,rakuBracketComment
+syn region rakuBracketComment
+    \ matchgroup=rakuBracketComment
     \ start="#[`|=]«««"
     \ skip="«««\%([^»]\|»\%(»»\)\@!\)*»»»"
     \ end="»»»"
-    \ contains=p6Attention,p6BracketComment
+    \ contains=rakuAttention,rakuBracketComment
 
-syn match p6Shebang display "\%^#!.*"
+syn match rakuShebang display "\%^#!.*"
 
 " => and p5=> autoquoting
-syn match p6StringP5Auto display "\.\@1<!\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\ze\s\+p5=>"
-syn match p6StringAuto   display "\.\@1<!\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\ze\%(p5\)\@2<![RSXZ]\@1<!=>"
-syn match p6StringAuto   display "\.\@1<!\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\ze\s\+=>"
-syn match p6StringAuto   display "\.\@1<!\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)p5\ze=>"
+syn match rakuStringP5Auto display "\.\@1<!\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\ze\s\+p5=>"
+syn match rakuStringAuto   display "\.\@1<!\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\ze\%(p5\)\@2<![RSXZ]\@1<!=>"
+syn match rakuStringAuto   display "\.\@1<!\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\ze\s\+=>"
+syn match rakuStringAuto   display "\.\@1<!\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)p5\ze=>"
 
 " Pod
 
 " Abbreviated blocks (implicit code forbidden)
-syn region p6PodAbbrRegion
-    \ matchgroup=p6PodPrefix
+syn region rakuPodAbbrRegion
+    \ matchgroup=rakuPodPrefix
     \ start="^\s*\zs=\ze\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
     \ end="^\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
-    \ contains=p6PodAbbrNoCodeType
+    \ contains=rakuPodAbbrNoCodeType
     \ keepend
 
-syn region p6PodAbbrNoCodeType
-    \ matchgroup=p6PodType
+syn region rakuPodAbbrNoCodeType
+    \ matchgroup=rakuPodType
     \ start="\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
     \ end="^\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
     \ contained
-    \ contains=p6PodName,p6PodAbbrNoCode
+    \ contains=rakuPodName,rakuPodAbbrNoCode
 
-syn match p6PodName contained ".\+" contains=@p6PodFormat
-syn match p6PodComment contained ".\+"
+syn match rakuPodName contained ".\+" contains=@rakuPodFormat
+syn match rakuPodComment contained ".\+"
 
-syn region p6PodAbbrNoCode
+syn region rakuPodAbbrNoCode
     \ start="^"
     \ end="^\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
     \ contained
-    \ contains=@p6PodFormat
+    \ contains=@rakuPodFormat
 
 " Abbreviated blocks (everything is code)
-syn region p6PodAbbrRegion
-    \ matchgroup=p6PodPrefix
+syn region rakuPodAbbrRegion
+    \ matchgroup=rakuPodPrefix
     \ start="^\s*\zs=\zecode\>"
     \ end="^\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
-    \ contains=p6PodAbbrCodeType
+    \ contains=rakuPodAbbrCodeType
     \ keepend
 
-syn region p6PodAbbrCodeType
-    \ matchgroup=p6PodType
+syn region rakuPodAbbrCodeType
+    \ matchgroup=rakuPodType
     \ start="\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
     \ end="^\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
     \ contained
-    \ contains=p6PodName,p6PodAbbrCode
+    \ contains=rakuPodName,rakuPodAbbrCode
 
-syn region p6PodAbbrCode
+syn region rakuPodAbbrCode
     \ start="^"
     \ end="^\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
     \ contained
 
 " Abbreviated blocks (everything is a comment)
-syn region p6PodAbbrRegion
-    \ matchgroup=p6PodPrefix
+syn region rakuPodAbbrRegion
+    \ matchgroup=rakuPodPrefix
     \ start="^=\zecomment\>"
     \ end="^\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
-    \ contains=p6PodAbbrCommentType
+    \ contains=rakuPodAbbrCommentType
     \ keepend
 
-syn region p6PodAbbrCommentType
-    \ matchgroup=p6PodType
+syn region rakuPodAbbrCommentType
+    \ matchgroup=rakuPodType
     \ start="\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
     \ end="^\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
     \ contained
-    \ contains=p6PodComment,p6PodAbbrNoCode
+    \ contains=rakuPodComment,rakuPodAbbrNoCode
 
 " Abbreviated blocks (implicit code allowed)
-syn region p6PodAbbrRegion
-    \ matchgroup=p6PodPrefix
+syn region rakuPodAbbrRegion
+    \ matchgroup=rakuPodPrefix
     \ start="^=\ze\%(pod\|item\|nested\|\u\+\)\>"
     \ end="^\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
-    \ contains=p6PodAbbrType
+    \ contains=rakuPodAbbrType
     \ keepend
 
-syn region p6PodAbbrType
-    \ matchgroup=p6PodType
+syn region rakuPodAbbrType
+    \ matchgroup=rakuPodType
     \ start="\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
     \ end="^\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
     \ contained
-    \ contains=p6PodName,p6PodAbbr
+    \ contains=rakuPodName,rakuPodAbbr
 
-syn region p6PodAbbr
+syn region rakuPodAbbr
     \ start="^"
     \ end="^\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
     \ contained
-    \ contains=@p6PodFormat,p6PodImplicitCode
+    \ contains=@rakuPodFormat,rakuPodImplicitCode
 
 " Abbreviated block to end-of-file
-syn region p6PodAbbrRegion
-    \ matchgroup=p6PodPrefix
+syn region rakuPodAbbrRegion
+    \ matchgroup=rakuPodPrefix
     \ start="^=\zeEND\>"
     \ end="\%$"
-    \ contains=p6PodAbbrEOFType
+    \ contains=rakuPodAbbrEOFType
     \ keepend
 
-syn region p6PodAbbrEOFType
-    \ matchgroup=p6PodType
+syn region rakuPodAbbrEOFType
+    \ matchgroup=rakuPodType
     \ start="\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
     \ end="\%$"
     \ contained
-    \ contains=p6PodName,p6PodAbbrEOF
+    \ contains=rakuPodName,rakuPodAbbrEOF
 
-syn region p6PodAbbrEOF
+syn region rakuPodAbbrEOF
     \ start="^"
     \ end="\%$"
     \ contained
-    \ contains=@p6PodNestedBlocks,@p6PodFormat,p6PodImplicitCode
+    \ contains=@rakuPodNestedBlocks,@rakuPodFormat,rakuPodImplicitCode
 
 " Directives
-syn region p6PodDirectRegion
-    \ matchgroup=p6PodPrefix
+syn region rakuPodDirectRegion
+    \ matchgroup=rakuPodPrefix
     \ start="^=\%(config\|use\)\>"
     \ end="^\ze\%([^=]\|=[A-Za-z_\xC0-\xFF]\|\s*$\)"
-    \ contains=p6PodDirectArgRegion
+    \ contains=rakuPodDirectArgRegion
     \ keepend
 
-syn region p6PodDirectArgRegion
-    \ matchgroup=p6PodType
+syn region rakuPodDirectArgRegion
+    \ matchgroup=rakuPodType
     \ start="\S\+"
     \ end="^\ze\%([^=]\|=[A-Za-z_\xC0-\xFF]\|\s*$\)"
     \ contained
-    \ contains=p6PodDirectConfigRegion
+    \ contains=rakuPodDirectConfigRegion
 
-syn region p6PodDirectConfigRegion
+syn region rakuPodDirectConfigRegion
     \ start=""
     \ end="^\ze\%([^=]\|=[A-Za-z_\xC0-\xFF]\|\s*$\)"
     \ contained
-    \ contains=@p6PodConfig
+    \ contains=@rakuPodConfig
 
 " =encoding is a special directive
-syn region p6PodDirectRegion
-    \ matchgroup=p6PodPrefix
+syn region rakuPodDirectRegion
+    \ matchgroup=rakuPodPrefix
     \ start="^=encoding\>"
     \ end="^\ze\%([^=]\|=[A-Za-z_\xC0-\xFF]\|\s*$\)"
-    \ contains=p6PodEncodingArgRegion
+    \ contains=rakuPodEncodingArgRegion
     \ keepend
 
-syn region p6PodEncodingArgRegion
-    \ matchgroup=p6PodName
+syn region rakuPodEncodingArgRegion
+    \ matchgroup=rakuPodName
     \ start="\S\+"
     \ end="^\ze\%([^=]\|=[A-Za-z_\xC0-\xFF]\|\s*$\)"
     \ contained
 
 " Paragraph blocks (implicit code forbidden)
-syn region p6PodParaRegion
-    \ matchgroup=p6PodPrefix
+syn region rakuPodParaRegion
+    \ matchgroup=rakuPodPrefix
     \ start="^\s*\zs=for\>"
     \ end="^\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
-    \ contains=p6PodParaNoCodeTypeRegion
+    \ contains=rakuPodParaNoCodeTypeRegion
     \ keepend extend
 
-syn region p6PodParaNoCodeTypeRegion
-    \ matchgroup=p6PodType
+syn region rakuPodParaNoCodeTypeRegion
+    \ matchgroup=rakuPodType
     \ start="\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
     \ end="^\s*\zs\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
     \ contained
-    \ contains=p6PodParaNoCode,p6PodParaConfigRegion
+    \ contains=rakuPodParaNoCode,rakuPodParaConfigRegion
 
-syn region p6PodParaConfigRegion
+syn region rakuPodParaConfigRegion
     \ start=""
     \ end="^\ze\%([^=]\|=[A-Za-z_\xC0-\xFF]\@1<!\)"
     \ contained
-    \ contains=@p6PodConfig
+    \ contains=@rakuPodConfig
 
-syn region p6PodParaNoCode
+syn region rakuPodParaNoCode
     \ start="^[^=]"
     \ end="^\s*\zs\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
     \ contained
-    \ contains=@p6PodFormat
+    \ contains=@rakuPodFormat
 
 " Paragraph blocks (everything is code)
-syn region p6PodParaRegion
-    \ matchgroup=p6PodPrefix
+syn region rakuPodParaRegion
+    \ matchgroup=rakuPodPrefix
     \ start="^\s*\zs=for\>\ze\s*code\>"
     \ end="^\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
-    \ contains=p6PodParaCodeTypeRegion
+    \ contains=rakuPodParaCodeTypeRegion
     \ keepend extend
 
-syn region p6PodParaCodeTypeRegion
-    \ matchgroup=p6PodType
+syn region rakuPodParaCodeTypeRegion
+    \ matchgroup=rakuPodType
     \ start="\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
     \ end="^\s*\zs\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
     \ contained
-    \ contains=p6PodParaCode,p6PodParaConfigRegion
+    \ contains=rakuPodParaCode,rakuPodParaConfigRegion
 
-syn region p6PodParaCode
+syn region rakuPodParaCode
     \ start="^[^=]"
     \ end="^\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
     \ contained
 
 " Paragraph blocks (implicit code allowed)
-syn region p6PodParaRegion
-    \ matchgroup=p6PodPrefix
+syn region rakuPodParaRegion
+    \ matchgroup=rakuPodPrefix
     \ start="^\s*\zs=for\>\ze\s*\%(pod\|item\|nested\|\u\+\)\>"
     \ end="^\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
-    \ contains=p6PodParaTypeRegion
+    \ contains=rakuPodParaTypeRegion
     \ keepend extend
 
-syn region p6PodParaTypeRegion
-    \ matchgroup=p6PodType
+syn region rakuPodParaTypeRegion
+    \ matchgroup=rakuPodType
     \ start="\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
     \ end="^\s*\zs\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
     \ contained
-    \ contains=p6PodPara,p6PodParaConfigRegion
+    \ contains=rakuPodPara,rakuPodParaConfigRegion
 
-syn region p6PodPara
+syn region rakuPodPara
     \ start="^[^=]"
     \ end="^\s*\zs\ze\%(\s*$\|=[A-Za-z_\xC0-\xFF]\)"
     \ contained
-    \ contains=@p6PodFormat,p6PodImplicitCode
+    \ contains=@rakuPodFormat,rakuPodImplicitCode
 
 " Paragraph block to end-of-file
-syn region p6PodParaRegion
-    \ matchgroup=p6PodPrefix
+syn region rakuPodParaRegion
+    \ matchgroup=rakuPodPrefix
     \ start="^=for\>\ze\s\+END\>"
     \ end="\%$"
-    \ contains=p6PodParaEOFTypeRegion
+    \ contains=rakuPodParaEOFTypeRegion
     \ keepend extend
 
-syn region p6PodParaEOFTypeRegion
-    \ matchgroup=p6PodType
+syn region rakuPodParaEOFTypeRegion
+    \ matchgroup=rakuPodType
     \ start="\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
     \ end="\%$"
     \ contained
-    \ contains=p6PodParaEOF,p6PodParaConfigRegion
+    \ contains=rakuPodParaEOF,rakuPodParaConfigRegion
 
-syn region p6PodParaEOF
+syn region rakuPodParaEOF
     \ start="^[^=]"
     \ end="\%$"
     \ contained
-    \ contains=@p6PodNestedBlocks,@p6PodFormat,p6PodImplicitCode
+    \ contains=@rakuPodNestedBlocks,@rakuPodFormat,rakuPodImplicitCode
 
 " Delimited blocks (implicit code forbidden)
-syn region p6PodDelimRegion
-    \ matchgroup=p6PodPrefix
+syn region rakuPodDelimRegion
+    \ matchgroup=rakuPodPrefix
     \ start="^\z(\s*\)\zs=begin\>"
     \ end="^\z1\zs=end\>"
-    \ contains=p6PodDelimNoCodeTypeRegion
+    \ contains=rakuPodDelimNoCodeTypeRegion
     \ keepend extend skipwhite
-    \ nextgroup=p6PodType
+    \ nextgroup=rakuPodType
 
-syn region p6PodDelimNoCodeTypeRegion
-    \ matchgroup=p6PodType
+syn region rakuPodDelimNoCodeTypeRegion
+    \ matchgroup=rakuPodType
     \ start="\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
     \ end="^\s*\zs\ze=end\>"
     \ contained
-    \ contains=p6PodDelimNoCode,p6PodDelimConfigRegion
+    \ contains=rakuPodDelimNoCode,rakuPodDelimConfigRegion
 
-syn region p6PodDelimConfigRegion
+syn region rakuPodDelimConfigRegion
     \ start=""
     \ end="^\s*\zs\ze\%([^=]\|=[A-Za-z_\xC0-\xFF]\|\s*$\)"
     \ contained
-    \ contains=@p6PodConfig
+    \ contains=@rakuPodConfig
 
-syn region p6PodDelimNoCode
+syn region rakuPodDelimNoCode
     \ start="^"
     \ end="^\s*\zs\ze=end\>"
     \ contained
-    \ contains=@p6PodNestedBlocks,@p6PodFormat
+    \ contains=@rakuPodNestedBlocks,@rakuPodFormat
 
 " Delimited blocks (everything is code)
-syn region p6PodDelimRegion
-    \ matchgroup=p6PodPrefix
+syn region rakuPodDelimRegion
+    \ matchgroup=rakuPodPrefix
     \ start="^\z(\s*\)\zs=begin\>\ze\s*code\>"
     \ end="^\z1\zs=end\>"
-    \ contains=p6PodDelimCodeTypeRegion
+    \ contains=rakuPodDelimCodeTypeRegion
     \ keepend extend skipwhite
-    \ nextgroup=p6PodType
+    \ nextgroup=rakuPodType
 
-syn region p6PodDelimCodeTypeRegion
-    \ matchgroup=p6PodType
+syn region rakuPodDelimCodeTypeRegion
+    \ matchgroup=rakuPodType
     \ start="\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
     \ end="^\s*\zs\ze=end\>"
     \ contained
-    \ contains=p6PodDelimCode,p6PodDelimConfigRegion
+    \ contains=rakuPodDelimCode,rakuPodDelimConfigRegion
 
-syn region p6PodDelimCode
+syn region rakuPodDelimCode
     \ start="^"
     \ end="^\s*\zs\ze=end\>"
     \ contained
-    \ contains=@p6PodNestedBlocks
+    \ contains=@rakuPodNestedBlocks
 
 " Delimited blocks (implicit code allowed)
-syn region p6PodDelimRegion
-    \ matchgroup=p6PodPrefix
+syn region rakuPodDelimRegion
+    \ matchgroup=rakuPodPrefix
     \ start="^\z(\s*\)\zs=begin\>\ze\s*\%(pod\|item\|nested\|\u\+\)\>"
     \ end="^\z1\zs=end\>"
-    \ contains=p6PodDelimTypeRegion
+    \ contains=rakuPodDelimTypeRegion
     \ keepend extend skipwhite
-    \ nextgroup=p6PodType
+    \ nextgroup=rakuPodType
 
-syn region p6PodDelimTypeRegion
-    \ matchgroup=p6PodType
+syn region rakuPodDelimTypeRegion
+    \ matchgroup=rakuPodType
     \ start="\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
     \ end="^\s*\zs\ze=end\>"
     \ contained
-    \ contains=p6PodDelim,p6PodDelimConfigRegion
+    \ contains=rakuPodDelim,rakuPodDelimConfigRegion
 
-syn region p6PodDelim
+syn region rakuPodDelim
     \ start="^"
     \ end="^\s*\zs\ze=end\>"
     \ contained
-    \ contains=@p6PodNestedBlocks,@p6PodFormat,p6PodImplicitCode
+    \ contains=@rakuPodNestedBlocks,@rakuPodFormat,rakuPodImplicitCode
 
 " Delimited block to end-of-file
-syn region p6PodDelimRegion
-    \ matchgroup=p6PodPrefix
+syn region rakuPodDelimRegion
+    \ matchgroup=rakuPodPrefix
     \ start="^=begin\>\ze\s\+END\>"
     \ end="\%$"
     \ extend
-    \ contains=p6PodDelimEOFTypeRegion
+    \ contains=rakuPodDelimEOFTypeRegion
 
-syn region p6PodDelimEOFTypeRegion
-    \ matchgroup=p6PodType
+syn region rakuPodDelimEOFTypeRegion
+    \ matchgroup=rakuPodType
     \ start="\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
     \ end="\%$"
     \ contained
-    \ contains=p6PodDelimEOF,p6PodDelimConfigRegion
+    \ contains=rakuPodDelimEOF,rakuPodDelimConfigRegion
 
-syn region p6PodDelimEOF
+syn region rakuPodDelimEOF
     \ start="^"
     \ end="\%$"
     \ contained
-    \ contains=@p6PodNestedBlocks,@p6PodFormat,p6PodImplicitCode
+    \ contains=@rakuPodNestedBlocks,@rakuPodFormat,rakuPodImplicitCode
 
-syn cluster p6PodConfig
-    \ add=p6PodConfigOperator
-    \ add=p6PodExtraConfig
-    \ add=p6StringAuto
-    \ add=p6PodAutoQuote
-    \ add=p6StringSQ
+syn cluster rakuPodConfig
+    \ add=rakuPodConfigOperator
+    \ add=rakuPodExtraConfig
+    \ add=rakuStringAuto
+    \ add=rakuPodAutoQuote
+    \ add=rakuStringSQ
 
-syn region p6PodParens
+syn region rakuPodParens
     \ start="("
     \ end=")"
     \ contained
-    \ contains=p6Number,p6StringSQ
+    \ contains=rakuNumber,rakuStringSQ
 
-syn match p6PodAutoQuote      display contained "=>"
-syn match p6PodConfigOperator display contained ":!\?" nextgroup=p6PodConfigOption
-syn match p6PodConfigOption   display contained "[^[:space:](<]\+" nextgroup=p6PodParens,p6StringAngle
-syn match p6PodExtraConfig    display contained "^="
-syn match p6PodVerticalBar    display contained "|"
-syn match p6PodColon          display contained ":"
-syn match p6PodSemicolon      display contained ";"
-syn match p6PodComma          display contained ","
-syn match p6PodImplicitCode   display contained "^\s.*"
-syn match p6PodType           display contained "\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
+syn match rakuPodAutoQuote      display contained "=>"
+syn match rakuPodConfigOperator display contained ":!\?" nextgroup=rakuPodConfigOption
+syn match rakuPodConfigOption   display contained "[^[:space:](<]\+" nextgroup=rakuPodParens,rakuStringAngle
+syn match rakuPodExtraConfig    display contained "^="
+syn match rakuPodVerticalBar    display contained "|"
+syn match rakuPodColon          display contained ":"
+syn match rakuPodSemicolon      display contained ";"
+syn match rakuPodComma          display contained ","
+syn match rakuPodImplicitCode   display contained "^\s.*"
+syn match rakuPodType           display contained "\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
 
 " These may appear inside delimited blocks
-syn cluster p6PodNestedBlocks
-    \ add=p6PodAbbrRegion
-    \ add=p6PodDirectRegion
-    \ add=p6PodParaRegion
-    \ add=p6PodDelimRegion
+syn cluster rakuPodNestedBlocks
+    \ add=rakuPodAbbrRegion
+    \ add=rakuPodDirectRegion
+    \ add=rakuPodParaRegion
+    \ add=rakuPodDelimRegion
 
 " Pod formatting codes
 
-syn cluster p6PodFormat
-    \ add=p6PodFormatOne
-    \ add=p6PodFormatTwo
-    \ add=p6PodFormatThree
-    \ add=p6PodFormatFrench
+syn cluster rakuPodFormat
+    \ add=rakuPodFormatOne
+    \ add=rakuPodFormatTwo
+    \ add=rakuPodFormatThree
+    \ add=rakuPodFormatFrench
 
 " Balanced angles found inside formatting codes. Ensures proper nesting.
 
-syn region p6PodFormatAnglesOne
-    \ matchgroup=p6PodFormat
+syn region rakuPodFormatAnglesOne
+    \ matchgroup=rakuPodFormat
     \ start="<"
     \ skip="<[^>]*>"
     \ end=">"
     \ transparent contained
-    \ contains=p6PodFormatAnglesFrench,p6PodFormatAnglesOne
+    \ contains=rakuPodFormatAnglesFrench,rakuPodFormatAnglesOne
 
-syn region p6PodFormatAnglesTwo
-    \ matchgroup=p6PodFormat
+syn region rakuPodFormatAnglesTwo
+    \ matchgroup=rakuPodFormat
     \ start="<<"
     \ skip="<<[^>]*>>"
     \ end=">>"
     \ transparent contained
-    \ contains=p6PodFormatAnglesFrench,p6PodFormatAnglesOne,p6PodFormatAnglesTwo
+    \ contains=rakuPodFormatAnglesFrench,rakuPodFormatAnglesOne,rakuPodFormatAnglesTwo
 
-syn region p6PodFormatAnglesThree
-    \ matchgroup=p6PodFormat
+syn region rakuPodFormatAnglesThree
+    \ matchgroup=rakuPodFormat
     \ start="<<<"
     \ skip="<<<[^>]*>>>"
     \ end=">>>"
     \ transparent contained
-    \ contains=p6PodFormatAnglesFrench,p6PodFormatAnglesOne,p6PodFormatAnglesTwo,p6PodFormatAnglesThree
+    \ contains=rakuPodFormatAnglesFrench,rakuPodFormatAnglesOne,rakuPodFormatAnglesTwo,rakuPodFormatAnglesThree
 
-syn region p6PodFormatAnglesFrench
-    \ matchgroup=p6PodFormat
+syn region rakuPodFormatAnglesFrench
+    \ matchgroup=rakuPodFormat
     \ start="«"
     \ skip="«[^»]*»"
     \ end="»"
     \ transparent contained
-    \ contains=p6PodFormatAnglesFrench,p6PodFormatAnglesOne,p6PodFormatAnglesTwo,p6PodFormatAnglesThree
+    \ contains=rakuPodFormatAnglesFrench,rakuPodFormatAnglesOne,rakuPodFormatAnglesTwo,rakuPodFormatAnglesThree
 
 " All formatting codes
 
-syn region p6PodFormatOne
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatOne
+    \ matchgroup=rakuPodFormatCode
     \ start="\u<"
     \ skip="<[^>]*>"
     \ end=">"
     \ contained
-    \ contains=p6PodFormatAnglesOne,p6PodFormatFrench,p6PodFormatOne
+    \ contains=rakuPodFormatAnglesOne,rakuPodFormatFrench,rakuPodFormatOne
 
-syn region p6PodFormatTwo
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatTwo
+    \ matchgroup=rakuPodFormatCode
     \ start="\u<<"
     \ skip="<<[^>]*>>"
     \ end=">>"
     \ contained
-    \ contains=p6PodFormatAnglesTwo,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo
+    \ contains=rakuPodFormatAnglesTwo,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo
 
-syn region p6PodFormatThree
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatThree
+    \ matchgroup=rakuPodFormatCode
     \ start="\u<<<"
     \ skip="<<<[^>]*>>>"
     \ end=">>>"
     \ contained
-    \ contains=p6PodFormatAnglesThree,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodFormatThree
+    \ contains=rakuPodFormatAnglesThree,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodFormatThree
 
-syn region p6PodFormatFrench
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatFrench
+    \ matchgroup=rakuPodFormatCode
     \ start="\u«"
     \ skip="«[^»]*»"
     \ end="»"
     \ contained
-    \ contains=p6PodFormatAnglesFrench,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodFormatThree
+    \ contains=rakuPodFormatAnglesFrench,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodFormatThree
 
 " C<> and V<> don't allow nested formatting formatting codes
 
-syn region p6PodFormatOne
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatOne
+    \ matchgroup=rakuPodFormatCode
     \ start="[CV]<"
     \ skip="<[^>]*>"
     \ end=">"
     \ contained
-    \ contains=p6PodFormatAnglesOne
+    \ contains=rakuPodFormatAnglesOne
 
-syn region p6PodFormatTwo
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatTwo
+    \ matchgroup=rakuPodFormatCode
     \ start="[CV]<<"
     \ skip="<<[^>]*>>"
     \ end=">>"
     \ contained
-    \ contains=p6PodFormatAnglesTwo
+    \ contains=rakuPodFormatAnglesTwo
 
-syn region p6PodFormatThree
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatThree
+    \ matchgroup=rakuPodFormatCode
     \ start="[CV]<<<"
     \ skip="<<<[^>]*>>>"
     \ end=">>>"
     \ contained
-    \ contains=p6PodFormatAnglesThree
+    \ contains=rakuPodFormatAnglesThree
 
-syn region p6PodFormatFrench
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatFrench
+    \ matchgroup=rakuPodFormatCode
     \ start="[CV]«"
     \ skip="«[^»]*»"
     \ end="»"
     \ contained
-    \ contains=p6PodFormatAnglesFrench
+    \ contains=rakuPodFormatAnglesFrench
 
 " L<> can have a "|" separator
 
-syn region p6PodFormatOne
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatOne
+    \ matchgroup=rakuPodFormatCode
     \ start="L<"
     \ skip="<[^>]*>"
     \ end=">"
     \ contained
-    \ contains=p6PodFormatAnglesOne,p6PodFormatFrench,p6PodFormatOne,p6PodVerticalBar
+    \ contains=rakuPodFormatAnglesOne,rakuPodFormatFrench,rakuPodFormatOne,rakuPodVerticalBar
 
-syn region p6PodFormatTwo
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatTwo
+    \ matchgroup=rakuPodFormatCode
     \ start="L<<"
     \ skip="<<[^>]*>>"
     \ end=">>"
     \ contained
-    \ contains=p6PodFormatAnglesTwo,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodVerticalBar
+    \ contains=rakuPodFormatAnglesTwo,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodVerticalBar
 
-syn region p6PodFormatThree
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatThree
+    \ matchgroup=rakuPodFormatCode
     \ start="L<<<"
     \ skip="<<<[^>]*>>>"
     \ end=">>>"
     \ contained
-    \ contains=p6PodFormatAnglesThree,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodFormatThree,p6PodVerticalBar
+    \ contains=rakuPodFormatAnglesThree,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodFormatThree,rakuPodVerticalBar
 
-syn region p6PodFormatFrench
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatFrench
+    \ matchgroup=rakuPodFormatCode
     \ start="L«"
     \ skip="«[^»]*»"
     \ end="»"
     \ contained
-    \ contains=p6PodFormatAnglesFrench,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodFormatThree,p6PodVerticalBar
+    \ contains=rakuPodFormatAnglesFrench,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodFormatThree,rakuPodVerticalBar
 
 " E<> can have a ";" separator
 
-syn region p6PodFormatOne
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatOne
+    \ matchgroup=rakuPodFormatCode
     \ start="E<"
     \ skip="<[^>]*>"
     \ end=">"
     \ contained
-    \ contains=p6PodFormatAnglesOne,p6PodFormatFrench,p6PodFormatOne,p6PodSemiColon
+    \ contains=rakuPodFormatAnglesOne,rakuPodFormatFrench,rakuPodFormatOne,rakuPodSemiColon
 
-syn region p6PodFormatTwo
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatTwo
+    \ matchgroup=rakuPodFormatCode
     \ start="E<<"
     \ skip="<<[^>]*>>"
     \ end=">>"
     \ contained
-    \ contains=p6PodFormatAnglesTwo,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodSemiColon
+    \ contains=rakuPodFormatAnglesTwo,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodSemiColon
 
-syn region p6PodFormatThree
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatThree
+    \ matchgroup=rakuPodFormatCode
     \ start="E<<<"
     \ skip="<<<[^>]*>>>"
     \ end=">>>"
     \ contained
-    \ contains=p6PodFormatAnglesThree,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodFormatThree,p6PodSemiColon
+    \ contains=rakuPodFormatAnglesThree,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodFormatThree,rakuPodSemiColon
 
-syn region p6PodFormatFrench
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatFrench
+    \ matchgroup=rakuPodFormatCode
     \ start="E«"
     \ skip="«[^»]*»"
     \ end="»"
     \ contained
-    \ contains=p6PodFormatAnglesFrench,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodFormatThree,p6PodSemiColon
+    \ contains=rakuPodFormatAnglesFrench,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodFormatThree,rakuPodSemiColon
 
 " M<> can have a ":" separator
 
-syn region p6PodFormatOne
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatOne
+    \ matchgroup=rakuPodFormatCode
     \ start="M<"
     \ skip="<[^>]*>"
     \ end=">"
     \ contained
-    \ contains=p6PodFormatAnglesOne,p6PodFormatFrench,p6PodFormatOne,p6PodColon
+    \ contains=rakuPodFormatAnglesOne,rakuPodFormatFrench,rakuPodFormatOne,rakuPodColon
 
-syn region p6PodFormatTwo
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatTwo
+    \ matchgroup=rakuPodFormatCode
     \ start="M<<"
     \ skip="<<[^>]*>>"
     \ end=">>"
     \ contained
-    \ contains=p6PodFormatAnglesTwo,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodColon
+    \ contains=rakuPodFormatAnglesTwo,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodColon
 
-syn region p6PodFormatThree
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatThree
+    \ matchgroup=rakuPodFormatCode
     \ start="M<<<"
     \ skip="<<<[^>]*>>>"
     \ end=">>>"
     \ contained
-    \ contains=p6PodFormatAnglesThree,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodFormatThree,p6PodColon
+    \ contains=rakuPodFormatAnglesThree,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodFormatThree,rakuPodColon
 
-syn region p6PodFormatFrench
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatFrench
+    \ matchgroup=rakuPodFormatCode
     \ start="M«"
     \ skip="«[^»]*»"
     \ end="»"
     \ contained
-    \ contains=p6PodFormatAnglesFrench,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodFormatThree,p6PodColon
+    \ contains=rakuPodFormatAnglesFrench,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodFormatThree,rakuPodColon
 
 " D<> can have "|" and ";" separators
 
-syn region p6PodFormatOne
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatOne
+    \ matchgroup=rakuPodFormatCode
     \ start="D<"
     \ skip="<[^>]*>"
     \ end=">"
     \ contained
-    \ contains=p6PodFormatAnglesOne,p6PodFormatFrench,p6PodFormatOne,p6PodVerticalBar,p6PodSemiColon
+    \ contains=rakuPodFormatAnglesOne,rakuPodFormatFrench,rakuPodFormatOne,rakuPodVerticalBar,rakuPodSemiColon
 
-syn region p6PodFormatTwo
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatTwo
+    \ matchgroup=rakuPodFormatCode
     \ start="D<<"
     \ skip="<<[^>]*>>"
     \ end=">>"
     \ contained
-    \ contains=p6PodFormatAngleTwo,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodVerticalBar,p6PodSemiColon
+    \ contains=rakuPodFormatAngleTwo,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodVerticalBar,rakuPodSemiColon
 
-syn region p6PodFormatThree
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatThree
+    \ matchgroup=rakuPodFormatCode
     \ start="D<<<"
     \ skip="<<<[^>]*>>>"
     \ end=">>>"
     \ contained
-    \ contains=p6PodFormatAnglesThree,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodFormatThree,p6PodVerticalBar,p6PodSemiColon
+    \ contains=rakuPodFormatAnglesThree,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodFormatThree,rakuPodVerticalBar,rakuPodSemiColon
 
-syn region p6PodFormatFrench
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatFrench
+    \ matchgroup=rakuPodFormatCode
     \ start="D«"
     \ skip="«[^»]*»"
     \ end="»"
     \ contained
-    \ contains=p6PodFormatAnglesFrench,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodFormatThree,p6PodVerticalBar,p6PodSemiColon
+    \ contains=rakuPodFormatAnglesFrench,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodFormatThree,rakuPodVerticalBar,rakuPodSemiColon
 
 " X<> can have "|", "," and ";" separators
 
-syn region p6PodFormatOne
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatOne
+    \ matchgroup=rakuPodFormatCode
     \ start="X<"
     \ skip="<[^>]*>"
     \ end=">"
     \ contained
-    \ contains=p6PodFormatAnglesOne,p6PodFormatFrench,p6PodFormatOne,p6PodVerticalBar,p6PodSemiColon,p6PodComma
+    \ contains=rakuPodFormatAnglesOne,rakuPodFormatFrench,rakuPodFormatOne,rakuPodVerticalBar,rakuPodSemiColon,rakuPodComma
 
-syn region p6PodFormatTwo
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatTwo
+    \ matchgroup=rakuPodFormatCode
     \ start="X<<"
     \ skip="<<[^>]*>>"
     \ end=">>"
     \ contained
-    \ contains=p6PodFormatAnglesTwo,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodVerticalBar,p6PodSemiColon,p6PodComma
+    \ contains=rakuPodFormatAnglesTwo,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodVerticalBar,rakuPodSemiColon,rakuPodComma
 
-syn region p6PodFormatThree
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatThree
+    \ matchgroup=rakuPodFormatCode
     \ start="X<<<"
     \ skip="<<<[^>]*>>>"
     \ end=">>>"
     \ contained
-    \ contains=p6PodFormatAnglesThree,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodFormatThree,p6PodVerticalBar,p6PodSemiColon,p6PodComma
+    \ contains=rakuPodFormatAnglesThree,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodFormatThree,rakuPodVerticalBar,rakuPodSemiColon,rakuPodComma
 
-syn region p6PodFormatFrench
-    \ matchgroup=p6PodFormatCode
+syn region rakuPodFormatFrench
+    \ matchgroup=rakuPodFormatCode
     \ start="X«"
     \ skip="«[^»]*»"
     \ end="»"
     \ contained
-    \ contains=p6PodFormatAnglesFrench,p6PodFormatFrench,p6PodFormatOne,p6PodFormatTwo,p6PodFormatThree,p6PodVerticalBar,p6PodSemiColon,p6PodComma
+    \ contains=rakuPodFormatAnglesFrench,rakuPodFormatFrench,rakuPodFormatOne,rakuPodFormatTwo,rakuPodFormatThree,rakuPodVerticalBar,rakuPodSemiColon,rakuPodComma
 
 " Define the default highlighting.
 " For version 5.7 and earlier: only when not done already
@@ -1746,212 +1746,212 @@ if version >= 508 || !exists("did_raku_syntax_inits")
         command -nargs=+ HiLink hi def link <args>
     endif
 
-    HiLink p6EscOctOld        p6Error
-    HiLink p6PackageTwigil    p6Twigil
-    HiLink p6StringAngle      p6String
-    HiLink p6StringAngleFixed p6String
-    HiLink p6StringFrench     p6String
-    HiLink p6StringAngles     p6String
-    HiLink p6StringSQ         p6String
-    HiLink p6StringDQ         p6String
-    HiLink p6StringQ          p6String
-    HiLink p6StringQ_q        p6String
-    HiLink p6StringQ_qww      p6String
-    HiLink p6StringQ_qq       p6String
-    HiLink p6StringQ_to       p6String
-    HiLink p6StringQ_qto      p6String
-    HiLink p6StringQ_qqto     p6String
-    HiLink p6RxStringSQ       p6String
-    HiLink p6RxStringDQ       p6String
-    HiLink p6Replacement      p6String
-    HiLink p6ReplCurly        p6String
-    HiLink p6ReplAngle        p6String
-    HiLink p6ReplFrench       p6String
-    HiLink p6ReplBracket      p6String
-    HiLink p6ReplParen        p6String
-    HiLink p6Transliteration  p6String
-    HiLink p6TransRepl        p6String
-    HiLink p6TransReplCurly   p6String
-    HiLink p6TransReplAngle   p6String
-    HiLink p6TransReplFrench  p6String
-    HiLink p6TransReplBracket p6String
-    HiLink p6TransReplParen   p6String
-    HiLink p6StringAuto       p6String
-    HiLink p6StringP5Auto     p6String
-    HiLink p6Key              p6String
-    HiLink p6Match            p6String
-    HiLink p6Substitution     p6String
-    HiLink p6MatchBare        p6String
-    HiLink p6RegexBlock       p6String
-    HiLink p6RxP5CharClass    p6String
-    HiLink p6RxP5QuoteMeta    p6String
-    HiLink p6RxCharClass      p6String
-    HiLink p6RxQuoteWords     p6String
-    HiLink p6ReduceOp         p6Operator
-    HiLink p6SetOp            p6Operator
-    HiLink p6RSXZOp           p6Operator
-    HiLink p6HyperOp          p6Operator
-    HiLink p6PostHyperOp      p6Operator
-    HiLink p6QuoteQ           p6Quote
-    HiLink p6QuoteQ_q         p6Quote
-    HiLink p6QuoteQ_qww       p6Quote
-    HiLink p6QuoteQ_qq        p6Quote
-    HiLink p6QuoteQ_to        p6Quote
-    HiLink p6QuoteQ_qto       p6Quote
-    HiLink p6QuoteQ_qqto      p6Quote
-    HiLink p6QuoteQ_PIR       p6Quote
-    HiLink p6MatchStart_m     p6Quote
-    HiLink p6MatchStart_s     p6Quote
-    HiLink p6MatchStart_tr    p6Quote
-    HiLink p6BareSigil        p6Variable
-    HiLink p6RxRange          p6StringSpecial
-    HiLink p6RxAnchor         p6StringSpecial
-    HiLink p6RxBoundary       p6StringSpecial
-    HiLink p6RxP5Anchor       p6StringSpecial
-    HiLink p6CodePoint        p6StringSpecial
-    HiLink p6RxMeta           p6StringSpecial
-    HiLink p6RxP5Range        p6StringSpecial
-    HiLink p6RxP5CPId         p6StringSpecial
-    HiLink p6RxP5Posix        p6StringSpecial
-    HiLink p6RxP5Mod          p6StringSpecial
-    HiLink p6RxP5HexSeq       p6StringSpecial
-    HiLink p6RxP5OctSeq       p6StringSpecial
-    HiLink p6RxP5WriteRefId   p6StringSpecial
-    HiLink p6HexSequence      p6StringSpecial
-    HiLink p6OctSequence      p6StringSpecial
-    HiLink p6RxP5Named        p6StringSpecial
-    HiLink p6RxP5PropId       p6StringSpecial
-    HiLink p6RxP5Quantifier   p6StringSpecial
-    HiLink p6RxP5CountId      p6StringSpecial
-    HiLink p6RxP5Verb         p6StringSpecial
-    HiLink p6RxAssertGroup    p6StringSpecial2
-    HiLink p6Escape           p6StringSpecial2
-    HiLink p6EscNull          p6StringSpecial2
-    HiLink p6EscHash          p6StringSpecial2
-    HiLink p6EscQQ            p6StringSpecial2
-    HiLink p6EscQuote         p6StringSpecial2
-    HiLink p6EscDoubleQuote   p6StringSpecial2
-    HiLink p6EscBackTick      p6StringSpecial2
-    HiLink p6EscForwardSlash  p6StringSpecial2
-    HiLink p6EscVerticalBar   p6StringSpecial2
-    HiLink p6EscExclamation   p6StringSpecial2
-    HiLink p6EscDollar        p6StringSpecial2
-    HiLink p6EscOpenCurly     p6StringSpecial2
-    HiLink p6EscCloseCurly    p6StringSpecial2
-    HiLink p6EscCloseBracket  p6StringSpecial2
-    HiLink p6EscCloseAngle    p6StringSpecial2
-    HiLink p6EscCloseFrench   p6StringSpecial2
-    HiLink p6EscBackSlash     p6StringSpecial2
-    HiLink p6EscCodePoint     p6StringSpecial2
-    HiLink p6EscOct           p6StringSpecial2
-    HiLink p6EscHex           p6StringSpecial2
-    HiLink p6RxEscape         p6StringSpecial2
-    HiLink p6RxCapture        p6StringSpecial2
-    HiLink p6RxAlternation    p6StringSpecial2
-    HiLink p6RxP5             p6StringSpecial2
-    HiLink p6RxP5ReadRef      p6StringSpecial2
-    HiLink p6RxP5Oct          p6StringSpecial2
-    HiLink p6RxP5Hex          p6StringSpecial2
-    HiLink p6RxP5EscMeta      p6StringSpecial2
-    HiLink p6RxP5Meta         p6StringSpecial2
-    HiLink p6RxP5Escape       p6StringSpecial2
-    HiLink p6RxP5CodePoint    p6StringSpecial2
-    HiLink p6RxP5WriteRef     p6StringSpecial2
-    HiLink p6RxP5Prop         p6StringSpecial2
+    HiLink rakuEscOctOld        rakuError
+    HiLink rakuPackageTwigil    rakuTwigil
+    HiLink rakuStringAngle      rakuString
+    HiLink rakuStringAngleFixed rakuString
+    HiLink rakuStringFrench     rakuString
+    HiLink rakuStringAngles     rakuString
+    HiLink rakuStringSQ         rakuString
+    HiLink rakuStringDQ         rakuString
+    HiLink rakuStringQ          rakuString
+    HiLink rakuStringQ_q        rakuString
+    HiLink rakuStringQ_qww      rakuString
+    HiLink rakuStringQ_qq       rakuString
+    HiLink rakuStringQ_to       rakuString
+    HiLink rakuStringQ_qto      rakuString
+    HiLink rakuStringQ_qqto     rakuString
+    HiLink rakuRxStringSQ       rakuString
+    HiLink rakuRxStringDQ       rakuString
+    HiLink rakuReplacement      rakuString
+    HiLink rakuReplCurly        rakuString
+    HiLink rakuReplAngle        rakuString
+    HiLink rakuReplFrench       rakuString
+    HiLink rakuReplBracket      rakuString
+    HiLink rakuReplParen        rakuString
+    HiLink rakuTransliteration  rakuString
+    HiLink rakuTransRepl        rakuString
+    HiLink rakuTransReplCurly   rakuString
+    HiLink rakuTransReplAngle   rakuString
+    HiLink rakuTransReplFrench  rakuString
+    HiLink rakuTransReplBracket rakuString
+    HiLink rakuTransReplParen   rakuString
+    HiLink rakuStringAuto       rakuString
+    HiLink rakuStringP5Auto     rakuString
+    HiLink rakuKey              rakuString
+    HiLink rakuMatch            rakuString
+    HiLink rakuSubstitution     rakuString
+    HiLink rakuMatchBare        rakuString
+    HiLink rakuRegexBlock       rakuString
+    HiLink rakuRxP5CharClass    rakuString
+    HiLink rakuRxP5QuoteMeta    rakuString
+    HiLink rakuRxCharClass      rakuString
+    HiLink rakuRxQuoteWords     rakuString
+    HiLink rakuReduceOp         rakuOperator
+    HiLink rakuSetOp            rakuOperator
+    HiLink rakuRSXZOp           rakuOperator
+    HiLink rakuHyperOp          rakuOperator
+    HiLink rakuPostHyperOp      rakuOperator
+    HiLink rakuQuoteQ           rakuQuote
+    HiLink rakuQuoteQ_q         rakuQuote
+    HiLink rakuQuoteQ_qww       rakuQuote
+    HiLink rakuQuoteQ_qq        rakuQuote
+    HiLink rakuQuoteQ_to        rakuQuote
+    HiLink rakuQuoteQ_qto       rakuQuote
+    HiLink rakuQuoteQ_qqto      rakuQuote
+    HiLink rakuQuoteQ_PIR       rakuQuote
+    HiLink rakuMatchStart_m     rakuQuote
+    HiLink rakuMatchStart_s     rakuQuote
+    HiLink rakuMatchStart_tr    rakuQuote
+    HiLink rakuBareSigil        rakuVariable
+    HiLink rakuRxRange          rakuStringSpecial
+    HiLink rakuRxAnchor         rakuStringSpecial
+    HiLink rakuRxBoundary       rakuStringSpecial
+    HiLink rakuRxP5Anchor       rakuStringSpecial
+    HiLink rakuCodePoint        rakuStringSpecial
+    HiLink rakuRxMeta           rakuStringSpecial
+    HiLink rakuRxP5Range        rakuStringSpecial
+    HiLink rakuRxP5CPId         rakuStringSpecial
+    HiLink rakuRxP5Posix        rakuStringSpecial
+    HiLink rakuRxP5Mod          rakuStringSpecial
+    HiLink rakuRxP5HexSeq       rakuStringSpecial
+    HiLink rakuRxP5OctSeq       rakuStringSpecial
+    HiLink rakuRxP5WriteRefId   rakuStringSpecial
+    HiLink rakuHexSequence      rakuStringSpecial
+    HiLink rakuOctSequence      rakuStringSpecial
+    HiLink rakuRxP5Named        rakuStringSpecial
+    HiLink rakuRxP5PropId       rakuStringSpecial
+    HiLink rakuRxP5Quantifier   rakuStringSpecial
+    HiLink rakuRxP5CountId      rakuStringSpecial
+    HiLink rakuRxP5Verb         rakuStringSpecial
+    HiLink rakuRxAssertGroup    rakuStringSpecial2
+    HiLink rakuEscape           rakuStringSpecial2
+    HiLink rakuEscNull          rakuStringSpecial2
+    HiLink rakuEscHash          rakuStringSpecial2
+    HiLink rakuEscQQ            rakuStringSpecial2
+    HiLink rakuEscQuote         rakuStringSpecial2
+    HiLink rakuEscDoubleQuote   rakuStringSpecial2
+    HiLink rakuEscBackTick      rakuStringSpecial2
+    HiLink rakuEscForwardSlash  rakuStringSpecial2
+    HiLink rakuEscVerticalBar   rakuStringSpecial2
+    HiLink rakuEscExclamation   rakuStringSpecial2
+    HiLink rakuEscDollar        rakuStringSpecial2
+    HiLink rakuEscOpenCurly     rakuStringSpecial2
+    HiLink rakuEscCloseCurly    rakuStringSpecial2
+    HiLink rakuEscCloseBracket  rakuStringSpecial2
+    HiLink rakuEscCloseAngle    rakuStringSpecial2
+    HiLink rakuEscCloseFrench   rakuStringSpecial2
+    HiLink rakuEscBackSlash     rakuStringSpecial2
+    HiLink rakuEscCodePoint     rakuStringSpecial2
+    HiLink rakuEscOct           rakuStringSpecial2
+    HiLink rakuEscHex           rakuStringSpecial2
+    HiLink rakuRxEscape         rakuStringSpecial2
+    HiLink rakuRxCapture        rakuStringSpecial2
+    HiLink rakuRxAlternation    rakuStringSpecial2
+    HiLink rakuRxP5             rakuStringSpecial2
+    HiLink rakuRxP5ReadRef      rakuStringSpecial2
+    HiLink rakuRxP5Oct          rakuStringSpecial2
+    HiLink rakuRxP5Hex          rakuStringSpecial2
+    HiLink rakuRxP5EscMeta      rakuStringSpecial2
+    HiLink rakuRxP5Meta         rakuStringSpecial2
+    HiLink rakuRxP5Escape       rakuStringSpecial2
+    HiLink rakuRxP5CodePoint    rakuStringSpecial2
+    HiLink rakuRxP5WriteRef     rakuStringSpecial2
+    HiLink rakuRxP5Prop         rakuStringSpecial2
 
-    HiLink p6Property       Tag
-    HiLink p6Attention      Todo
-    HiLink p6Type           Type
-    HiLink p6Error          Error
-    HiLink p6BlockLabel     Label
-    HiLink p6Normal         Normal
-    HiLink p6Identifier     Normal
-    HiLink p6Package        Normal
-    HiLink p6PackageScope   Normal
-    HiLink p6Number         Number
-    HiLink p6OctNumber      Number
-    HiLink p6BinNumber      Number
-    HiLink p6HexNumber      Number
-    HiLink p6DecNumber      Number
-    HiLink p6String         String
-    HiLink p6Repeat         Repeat
-    HiLink p6Pragma         Keyword
-    HiLink p6PreDeclare     Keyword
-    HiLink p6Declare        Keyword
-    HiLink p6DeclareRegex   Keyword
-    HiLink p6VarStorage     Special
-    HiLink p6FlowControl    Special
-    HiLink p6OctBase        Special
-    HiLink p6BinBase        Special
-    HiLink p6HexBase        Special
-    HiLink p6DecBase        Special
-    HiLink p6Twigil         Special
-    HiLink p6StringSpecial2 Special
-    HiLink p6Version        Special
-    HiLink p6Comment        Comment
-    HiLink p6BracketComment Comment
-    HiLink p6Include        Include
-    HiLink p6Shebang        PreProc
-    HiLink p6ClosureTrait   PreProc
-    HiLink p6Operator       Operator
-    HiLink p6Context        Operator
-    HiLink p6Quote          Delimiter
-    HiLink p6TypeConstraint PreCondit
-    HiLink p6Exception      Exception
-    HiLink p6Variable       Identifier
-    HiLink p6VarSlash       Identifier
-    HiLink p6VarNum         Identifier
-    HiLink p6VarExclam      Identifier
-    HiLink p6VarMatch       Identifier
-    HiLink p6VarName        Identifier
-    HiLink p6MatchVar       Identifier
-    HiLink p6RxP5ReadRefId  Identifier
-    HiLink p6RxP5ModDef     Identifier
-    HiLink p6RxP5ModName    Identifier
-    HiLink p6Conditional    Conditional
-    HiLink p6StringSpecial  SpecialChar
+    HiLink rakuProperty       Tag
+    HiLink rakuAttention      Todo
+    HiLink rakuType           Type
+    HiLink rakuError          Error
+    HiLink rakuBlockLabel     Label
+    HiLink rakuNormal         Normal
+    HiLink rakuIdentifier     Normal
+    HiLink rakuPackage        Normal
+    HiLink rakuPackageScope   Normal
+    HiLink rakuNumber         Number
+    HiLink rakuOctNumber      Number
+    HiLink rakuBinNumber      Number
+    HiLink rakuHexNumber      Number
+    HiLink rakuDecNumber      Number
+    HiLink rakuString         String
+    HiLink rakuRepeat         Repeat
+    HiLink rakuPragma         Keyword
+    HiLink rakuPreDeclare     Keyword
+    HiLink rakuDeclare        Keyword
+    HiLink rakuDeclareRegex   Keyword
+    HiLink rakuVarStorage     Special
+    HiLink rakuFlowControl    Special
+    HiLink rakuOctBase        Special
+    HiLink rakuBinBase        Special
+    HiLink rakuHexBase        Special
+    HiLink rakuDecBase        Special
+    HiLink rakuTwigil         Special
+    HiLink rakuStringSpecial2 Special
+    HiLink rakuVersion        Special
+    HiLink rakuComment        Comment
+    HiLink rakuBracketComment Comment
+    HiLink rakuInclude        Include
+    HiLink rakuShebang        PreProc
+    HiLink rakuClosureTrait   PreProc
+    HiLink rakuOperator       Operator
+    HiLink rakuContext        Operator
+    HiLink rakuQuote          Delimiter
+    HiLink rakuTypeConstraint PreCondit
+    HiLink rakuException      Exception
+    HiLink rakuVariable       Identifier
+    HiLink rakuVarSlash       Identifier
+    HiLink rakuVarNum         Identifier
+    HiLink rakuVarExclam      Identifier
+    HiLink rakuVarMatch       Identifier
+    HiLink rakuVarName        Identifier
+    HiLink rakuMatchVar       Identifier
+    HiLink rakuRxP5ReadRefId  Identifier
+    HiLink rakuRxP5ModDef     Identifier
+    HiLink rakuRxP5ModName    Identifier
+    HiLink rakuConditional    Conditional
+    HiLink rakuStringSpecial  SpecialChar
 
-    HiLink p6PodAbbr         p6Pod
-    HiLink p6PodAbbrEOF      p6Pod
-    HiLink p6PodAbbrNoCode   p6Pod
-    HiLink p6PodAbbrCode     p6PodCode
-    HiLink p6PodPara         p6Pod
-    HiLink p6PodParaEOF      p6Pod
-    HiLink p6PodParaNoCode   p6Pod
-    HiLink p6PodParaCode     p6PodCode
-    HiLink p6PodDelim        p6Pod
-    HiLink p6PodDelimEOF     p6Pod
-    HiLink p6PodDelimNoCode  p6Pod
-    HiLink p6PodDelimCode    p6PodCode
-    HiLink p6PodImplicitCode p6PodCode
-    HiLink p6PodExtraConfig  p6PodPrefix
-    HiLink p6PodVerticalBar  p6PodFormatCode
-    HiLink p6PodColon        p6PodFormatCode
-    HiLink p6PodSemicolon    p6PodFormatCode
-    HiLink p6PodComma        p6PodFormatCode
-    HiLink p6PodFormatOne    p6PodFormat
-    HiLink p6PodFormatTwo    p6PodFormat
-    HiLink p6PodFormatThree  p6PodFormat
-    HiLink p6PodFormatFrench p6PodFormat
+    HiLink rakuPodAbbr         rakuPod
+    HiLink rakuPodAbbrEOF      rakuPod
+    HiLink rakuPodAbbrNoCode   rakuPod
+    HiLink rakuPodAbbrCode     rakuPodCode
+    HiLink rakuPodPara         rakuPod
+    HiLink rakuPodParaEOF      rakuPod
+    HiLink rakuPodParaNoCode   rakuPod
+    HiLink rakuPodParaCode     rakuPodCode
+    HiLink rakuPodDelim        rakuPod
+    HiLink rakuPodDelimEOF     rakuPod
+    HiLink rakuPodDelimNoCode  rakuPod
+    HiLink rakuPodDelimCode    rakuPodCode
+    HiLink rakuPodImplicitCode rakuPodCode
+    HiLink rakuPodExtraConfig  rakuPodPrefix
+    HiLink rakuPodVerticalBar  rakuPodFormatCode
+    HiLink rakuPodColon        rakuPodFormatCode
+    HiLink rakuPodSemicolon    rakuPodFormatCode
+    HiLink rakuPodComma        rakuPodFormatCode
+    HiLink rakuPodFormatOne    rakuPodFormat
+    HiLink rakuPodFormatTwo    rakuPodFormat
+    HiLink rakuPodFormatThree  rakuPodFormat
+    HiLink rakuPodFormatFrench rakuPodFormat
 
-    HiLink p6PodType           Type
-    HiLink p6PodConfigOption   String
-    HiLink p6PodCode           PreProc
-    HiLink p6Pod               Comment
-    HiLink p6PodComment        Comment
-    HiLink p6PodAutoQuote      Operator
-    HiLink p6PodConfigOperator Operator
-    HiLink p6PodPrefix         Statement
-    HiLink p6PodName           Identifier
-    HiLink p6PodFormatCode     SpecialChar
-    HiLink p6PodFormat         SpecialComment
+    HiLink rakuPodType           Type
+    HiLink rakuPodConfigOption   String
+    HiLink rakuPodCode           PreProc
+    HiLink rakuPod               Comment
+    HiLink rakuPodComment        Comment
+    HiLink rakuPodAutoQuote      Operator
+    HiLink rakuPodConfigOperator Operator
+    HiLink rakuPodPrefix         Statement
+    HiLink rakuPodName           Identifier
+    HiLink rakuPodFormatCode     SpecialChar
+    HiLink rakuPodFormat         SpecialComment
 
     delcommand HiLink
 endif
 
 if exists("raku_fold") || exists("raku_extended_all")
     setl foldmethod=syntax
-    syn region p6BlockFold
+    syn region rakuBlockFold
         \ start="^\z(\s*\)\%(my\|our\|augment\|multi\|proto\|only\)\?\s*\%(\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\s\+\)\?\<\%(CATCH\|try\|ENTER\|LEAVE\|CHECK\|INIT\|BEGIN\|END\|KEEP\|UNDO\|PRE\|POST\|module\|package\|enum\|subset\|class\|sub\%(method\)\?\|multi\|method\|slang\|grammar\|regex\|token\|rule\)\>[^{]\+\%({\s*\%(#.*\)\?\)\?$"
         \ end="^\z1}"
         \ transparent fold keepend extend

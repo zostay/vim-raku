@@ -67,7 +67,7 @@ function! GetRakuIndent()
     endif
 
     " Don't reindent POD and heredocs
-    if csynid =~ "^p6Pod"
+    if csynid =~ "^rakuPod"
         return indent(v:lnum)
     endif
 
@@ -87,7 +87,7 @@ function! GetRakuIndent()
         let skippin = 2
         while skippin
             let synid = synIDattr(synID(lnum,1,0),"name")
-            if (synid =~ "^p6Pod" || synid =~ "p6Comment")
+            if (synid =~ "^rakuPod" || synid =~ "rakuComment")
                 let lnum = prevnonblank(lnum - 1)
                 if lnum == 0
                     return 0
