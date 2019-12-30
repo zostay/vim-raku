@@ -1,4 +1,4 @@
-# vim-perl6
+# vim-raku
 Improved support for Raku in Vim.
 
 ## Installation
@@ -17,12 +17,12 @@ workflow too much. These can be enabled by setting a certain variable to a
 truthy value.
 
 ### Unicode ops
-`vim-perl6` can use Vim's abbreviation feature to convert ASCII based operators
+`vim-raku` can use Vim's abbreviation feature to convert ASCII based operators
 to their Unicode equivalents on the fly. To enable this feature, add the
 following line to your `vimrc` file:
 
 ```
-let g:perl6_unicode_abbrevs = 1
+let g:raku_unicode_abbrevs = 1
 ```
 
 [pathogen]: https://github.com/tpope/vim-pathogen
