@@ -141,7 +141,7 @@ let s:alpha_metaops_or = join(s:temp, "\\|")
 
 " We don't use "syn keyword" here because that always has higher priority
 " than matches/regions, which would prevent these words from matching as
-" autoquoted strings before "=>" or "p5=>".
+" autoquoted strings before "=>".
 syn match rakuKeywordStart display "\%(\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\)\@!\)\@=[A-Za-z_\xC0-\xFF0-9]\@1<!\%([A-Za-z_\xC0-\xFF][-']\)\@2<!"
     \ nextgroup=rakuAttention,rakuVariable,rakuInclude,rakuConditional,rakuVarStorage,rakuRepeat,rakuFlowControl,rakuClosureTrait,rakuException,rakuNumber,rakuPragma,rakuType,rakuOperator,rakuIdentifier
 
@@ -182,7 +182,7 @@ syn match rakuType display "\%(::\)\@2<!\%(Order\%(::Same\|::More\|::Less\)\?\|B
 syn match rakuOperator display "[-+/*~?|=^!%&,<>».;\\∈∉∋∌∩∪≼≽⊂⊃⊄⊅⊆⊇⊈⊉⊍⊎⊖∅∘]"
 syn match rakuOperator display "\%(:\@1<!::\@2!\|::=\|\.::\)"
 " these require whitespace on the left side
-syn match rakuOperator display "\%(\s\|^\)\@1<=\%(xx=\|p5=>\)"
+syn match rakuOperator display "\%(\s\|^\)\@1<=\%(xx=\)"
 " index overloading
 syn match rakuOperator display "\%(&\.(\@=\|@\.\[\@=\|%\.{\@=\)"
 
@@ -1105,8 +1105,7 @@ syn region rakuBracketComment
 
 syn match rakuShebang display "\%^#!.*"
 
-" => and p5=> autoquoting
-syn match rakuStringP5Auto display "\.\@1<!\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\ze\s\+p5=>"
+" => autoquoting
 syn match rakuStringAuto   display "\.\@1<!\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\ze\%(p5\)\@2<![RSXZ]\@1<!=>"
 syn match rakuStringAuto   display "\.\@1<!\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)\ze\s\+=>"
 syn match rakuStringAuto   display "\.\@1<!\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)p5\ze=>"
@@ -1784,7 +1783,6 @@ if version >= 508 || !exists("did_raku_syntax_inits")
     HiLink rakuTransReplBracket rakuString
     HiLink rakuTransReplParen   rakuString
     HiLink rakuStringAuto       rakuString
-    HiLink rakuStringP5Auto     rakuString
     HiLink rakuKey              rakuString
     HiLink rakuMatch            rakuString
     HiLink rakuSubstitution     rakuString
