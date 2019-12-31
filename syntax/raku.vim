@@ -164,7 +164,7 @@ syn match rakuDeclareRegex display "[.^]\@1<!\<\%(regex\|rule\|token\)\>" nextgr
 
 syn match rakuTypeConstraint  display "\%([.^]\|^\s*\)\@<!\a\@=\%(does\|as\|but\|trusts\|of\|returns\|handles\|where\|augment\|supersede\)\>"
 syn match rakuTypeConstraint  display "\%([.^]\|^\s*\)\@<![A-Za-z_\xC0-\xFF0-9]\@1<!\%([A-Za-z_\xC0-\xFF][-']\)\@2<!is\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\)\@!" skipwhite skipempty nextgroup=rakuProperty
-syn match rakuProperty        display "\a\@=\%(signature\|context\|also\|shape\|prec\|irs\|ofs\|ors\|export\|deep\|binary\|unary\|reparsed\|rw\|parsed\|cached\|readonly\|defequiv\|will\|ref\|copy\|inline\|tighter\|looser\|equiv\|assoc\|required\)" contained
+syn match rakuProperty        display "\a\@=\%(signature\|context\|also\|shape\|prec\|irs\|ofs\|ors\|export\|deep\|binary\|unary\|reparsed\|rw\|parsed\|cached\|readonly\|defequiv\|will\|ref\|copy\|inline\|tighter\|looser\|equiv\|assoc\|required\|DEPRECATED\|raw\|repr\|dynamic\|hidden-from-backtrace\|nodal\|pure\)" contained
 
 " packages, must come after all the keywords
 syn match rakuIdentifier display "\%(::\)\@2<=\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)*"
