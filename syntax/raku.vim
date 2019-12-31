@@ -126,7 +126,7 @@ let s:types = [
  \ "Positional Associative Ordering KeyExtractor",
  \ "Comparator OrderingPair IO KitchenSink Role",
  \ "Int Rat Buf UInt Abstraction Numeric Real",
- \ "Nil Mu",
+ \ "Nil Mu SeekFromBeginning SeekFromEnd SeekFromCurrent",
 \ ]
 
 " We explicitly enumerate the alphanumeric infix operators allowed after [RSXZ]
@@ -174,7 +174,7 @@ syn match rakuIdentifier display "\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\
 syn match rakuPackageTwigil display "\%(::\)\@2<=\*"
 
 " some standard packages
-syn match rakuType display "\%(::\)\@2<!\%(Order\%(::Same\|::More\|::Less\)\?\|Bool\%(::True\|::False\)\?\)\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\)\@!"
+syn match rakuType display "\%(::\)\@2<!\%(SeekType\%(::SeekFromBeginning\|::SeekFromCurrent\|::SeekFromEnd\)\|Order\%(::Same\|::More\|::Less\)\?\|Bool\%(::True\|::False\)\?\)\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\)\@!"
 
 " Don't put a "\+" at the end of the character class. That makes it so
 " greedy that the "%" " in "+%foo" won't be allowed to match as a sigil,
