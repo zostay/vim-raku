@@ -159,7 +159,7 @@ exec "syn match rakuType display \"\\%(". s:words . "\\)\\%([A-Za-z_\\xC0-\\xFF0
 unlet s:group s:words_list s:keywords s:types s:words_space s:temp s:words
 
 syn match rakuPreDeclare display "[.^]\@1<!\<\%(multi\|proto\|only\)\>" nextgroup=rakuDeclare,rakuIdentifier skipwhite skipempty
-syn match rakuDeclare display "[.^]\@1<!\<\%(macro\|sub\|submethod\|method\|category\|module\|class\|role\|package\|enum\|grammar\|slang\|subset\)\>" nextgroup=rakuIdentifier skipwhite skipempty
+syn match rakuDeclare display "[.^]\@1<!\<\%(macro\|sub\|submethod\|method\|module\|class\|role\|package\|enum\|grammar\|slang\|subset\)\>" nextgroup=rakuIdentifier skipwhite skipempty
 syn match rakuDeclareRegex display "[.^]\@1<!\<\%(regex\|rule\|token\)\>" nextgroup=rakuRegexName skipwhite skipempty
 
 syn match rakuTypeConstraint  display "\%([.^]\|^\s*\)\@<!\a\@=\%(does\|as\|but\|trusts\|of\|returns\|handles\|where\|augment\|supersede\)\>"
