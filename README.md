@@ -6,7 +6,7 @@ Installation of this plugin can be done via any of the available plugin
 managers, such as [Pathogen][pathogen], [vim-plug][vim-plug], [vundle][vundle]
 or any other one.
 
-Once installed, all files ending in `.raku`, `.rakudoc`, and '.rakutest' (and
+Once installed, all files ending in `.raku`, `.rakudoc`, and `.rakutest` (and
 also `.pl6`, `.pm6`, `.p6`, and `.t6` for legacy purposes) will make use of the
 plugin's features.
 
