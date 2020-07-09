@@ -1,10 +1,14 @@
 " Vim filetype plugin file
 " Language:      Raku
-" Maintainer:    vim-perl <vim-perl@googlegroups.com>
-" Homepage:      https://github.com/vim-perl/vim-perl6
-" Bugs/requests: https://github.com/vim-perl/vim-perl6/issues
+" Maintainer:    Sterling Hanenkamp <hanenkamp@cpan.org>
+" Homepage:      https://github.com/Raku/vim-raku
+" Bugs/requests: https://github.com/Raku/vim-raku/issues
 " Last Change:   {{LAST_CHANGE}}
 " Contributors:  Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>
+"                Moritz Lenz <moritz@faui2k3.org>
+"                Sterling Hanenkamp <hanenkamp@cpan.org>
+"                Luke Palmer <fibonaci@babylonia.flatirons.org>
+"                Ned Konz <ned at bike-nomad dot com>
 "
 " Based on ftplugin/perl.vim by Dan Sharp <dwsharp at hotmail dot com>
 

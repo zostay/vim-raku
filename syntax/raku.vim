@@ -1,13 +1,15 @@
 " Vim syntax file
 " Language:      Raku
-" Maintainer:    vim-perl <vim-perl@googlegroups.com>
-" Homepage:      https://github.com/vim-perl/vim-perl6
-" Bugs/requests: https://github.com/vim-perl/vim-perl6/issues
+" Maintainer:    Sterling Hanenkamp <hanenkamp@cpan.org>
+" Homepage:      https://github.com/Raku/vim-raku
+" Bugs/requests: https://github.com/Raku/vim-raku/issues
 " Last Change:   {{LAST_CHANGE}}
 
 " Contributors:  Luke Palmer <fibonaci@babylonia.flatirons.org>
 "                Moritz Lenz <moritz@faui2k3.org>
 "                Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>
+"                Sterling Hanenkamp <hanenkamp@cpan.org>
+"                Ned Konz <ned at bike-nomad dot com>
 "
 " This is a big undertaking.
 "
