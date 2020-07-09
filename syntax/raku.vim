@@ -39,23 +39,6 @@ endif
 let s:keepcpo= &cpo
 set cpo&vim
 
-" Patterns which will be interpolated by the preprocessor (tools/preproc.pl):
-"
-" @@IDENT_NONDIGIT@@     "[A-Za-z_\xC0-\xFF]"
-" @@IDENT_CHAR@@         "[A-Za-z_\xC0-\xFF0-9]"
-" @@IDENTIFIER@@         "\%(@@IDENT_NONDIGIT@@\%(@@IDENT_CHAR@@\|[-']@@IDENT_NONDIGIT@@\@=\)*\)"
-" @@IDENTIFIER_START@@   "@@IDENT_CHAR@@\@1<!\%(@@IDENT_NONDIGIT@@[-']\)\@2<!"
-" @@IDENTIFIER_END@@     "\%(@@IDENT_CHAR@@\|[-']@@IDENT_NONDIGIT@@\)\@!"
-" @@METAOP@@             #\%(\d\|[@%$][.?^=[:alpha:]]\)\@!\%(\.\|[^[{('".[:space:]]\)\+#
-" @@ADVERBS@@            "\%(\_s*:!\?@@IDENTIFIER@@\%(([^)]*)\)\?\)*"
-"
-" Same but escaped, for use in string eval
-" @@IDENT_NONDIGIT_Q@@   "[A-Za-z_\\xC0-\\xFF]"
-" @@IDENT_CHAR_Q@@       "[A-Za-z_\\xC0-\\xFF0-9]"
-" @@IDENTIFIER_Q@@       "\\%(@@IDENT_NONDIGIT_Q@@\\%(@@IDENT_CHAR_Q@@\\|[-']@@IDENT_NONDIGIT_Q@@\\@=\\)*\\)"
-" @@IDENTIFIER_START_Q@@ "@@IDENT_CHAR_Q@@\\@1<!\\%(@@IDENT_NONDIGIT_Q@@[-']\\)\\@2<!"
-" @@IDENTIFIER_END_Q@@   "\\%(@@IDENT_CHAR_Q@@\\|[-']@@IDENT_NONDIGIT_Q@@\\)\\@!"
-
 " Identifiers (subroutines, methods, constants, classes, roles, etc)
 syn match rakuIdentifier display "\%([A-Za-z_\xC0-\xFF]\%([A-Za-z_\xC0-\xFF0-9]\|[-'][A-Za-z_\xC0-\xFF]\@=\)*\)"
 
