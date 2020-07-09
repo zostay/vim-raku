@@ -27,7 +27,7 @@ setlocal commentstring=#%s
 "---------------------------------------------
 setlocal include=\\<\\(use\\\|require\\)\\>
 setlocal includeexpr=substitute(v:fname,'::','/','g')
-setlocal suffixesadd=.pm6,.pm,.raku,.rakutest,.t6
+setlocal suffixesadd=.pm6,.pm,.pod6,.raku,.rakumod,.rakudoc
 setlocal define=[^A-Za-z_]
 
 " The following line changes a global variable but is necessary to make
