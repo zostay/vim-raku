@@ -39,36 +39,41 @@ set isfname+=:
 setlocal iskeyword=@,48-57,_,192-255,-
 
 " Set this once, globally.
-if !exists("perlpath")
-    if executable("perl6")
+if !exists("rakupath")
+    if executable("raku")
+        let rakuexec = "raku"
+    elseif executable("perl6")
+        let rakuexec = "perl6"
+    endif
+
+    " TODO This is naive because raku has a repository format for installed
+    " files that is not made available this way.
+    if exists("rakuexec")
+        let incprog = "print join q/,/, gather for $*REPO.repo-chain {when CompUnit::Repository::FileSystem {.distribution.meta<name>.take}}"
         try
-            if &shellxquote != '"'
-                let perlpath = system('perl6 -e  "@*INC.join(q/,/).say"')
-            else
-                let perlpath = system("perl6 -e  '@*INC.join(q/,/).say'")
-            endif
-            let perlpath = substitute(perlpath,',.$',',,','')
+            let rakupath = system(rakuexec." -e '".incprog."'")
+            let rakupath = substitute(rakupath,',.$',',,','')
         catch /E145:/
-            let perlpath = ".,,"
+            let rakupath = ".,,"
         endtry
     else
-        " If we can't call perl to get its path, just default to using the
+        " If we can't call raku to get its path, just default to using the
         " current directory and the directory of the current file.
-        let perlpath = ".,,"
+        let rakupath = ".,,"
     endif
 endif
 
-" Append perlpath to the existing path value, if it is set.  Since we don't
-" use += to do it because of the commas in perlpath, we have to handle the
+" Append rakupath to the existing path value, if it is set.  Since we don't
+" use += to do it because of the commas in rakupath, we have to handle the
 " global / local settings, too.
 if &l:path == ""
     if &g:path == ""
-        let &l:path=perlpath
+        let &l:path=rakupath
     else
-        let &l:path=&g:path.",".perlpath
+        let &l:path=&g:path.",".rakupath
     endif
 else
-    let &l:path=&l:path.",".perlpath
+    let &l:path=&l:path.",".rakupath
 endif
 "---------------------------------------------
 
